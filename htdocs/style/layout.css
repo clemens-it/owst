@@ -1,0 +1,133 @@
+body {
+	background-color: black;
+	font-family: Arial, Helvetica, 'Sans Serif', Verdana;
+	color:white;
+	width: 350px;
+}
+
+hr {
+	height: 1px;
+	color: darkgrey;
+	background-color: darkgrey;
+	border: 1px solid darkgrey;
+}
+
+img {
+	border: 0px;
+}
+
+input, select {
+	background-color: #ddd;
+}
+
+a:link, a:visited, a:active { color:cyan; }
+a:hover, a:focus {}
+
+.owtitle {
+	margin-bottom:1em;
+	font-weight:bold;
+}
+
+.divbutton {
+	padding: 0.1em;
+	text-align: center;
+	float: left;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	border-top: 2px solid #f1f0ee;
+	border-left: 2px solid #f1f0ee;
+	border-bottom: 2px solid #75736e;
+	border-right: 2px solid #75736e;
+	background-color: #dddddd;
+	color:black;
+	font-size:0.9em;
+}
+
+a .divbutton  {
+	text-decoration: none;
+	color:black;
+}
+
+.errormsg {
+	border: 2px solid darkred;
+	background-color: red;
+	margin: 0.8em;
+	padding: 0.8em;
+}
+
+.switchlist a {
+	text-decoration: none;
+	color:white;
+}
+
+.switch {
+	border:1px solid black;
+	background-color: darkgrey;
+	color:white;
+	padding:.5em;
+}
+
+.timeprogramlist a {
+	text-decoration: none;
+	color:white;
+}
+
+.timeprogram {
+	border:1px solid black;
+	background-color: darkgrey;
+	color:white;
+	padding:.5em;
+	line-height: 1.3em;
+	width:100%;
+}
+
+.timeprogramdetail {
+	padding:.5em;
+	line-height: 1.4em;
+}
+
+.dayselected {
+	color:blue;
+}
+
+.daynotselected {
+	color: #bcbcbc;
+}
+
+.buttonbar {
+	background-color: #666; /* darkgrey: 999 */
+	margin-top: 1em;
+	padding:.5em;
+	xposition:fixed;
+	xbottom:0px;
+	width: 333px;
+	margin-bottom: 0px;
+}
+
+.OOoff, .OOon {
+	width:32px;
+	height:32px;
+	padding:1px 2px 3px 1px;	
+	font-size:12px;
+	background:lightgray;
+	text-align:center;	
+}
+.OOoff div, .OOon div {
+	width:18px;
+	height:18px;
+	min-height:18px;	
+	overflow:hidden;
+	border-top:1px solid gray;
+	border-right:1px solid white;
+	border-bottom:1px solid white;
+	border-left:1px solid gray;			
+	margin:0 auto;
+}
+.OOon div {
+	background:green;
+	color:lightgreen;
+}
+.OOoff div {
+	background:lightgray;
+	color:gray;
+}
