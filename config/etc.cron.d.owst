@@ -1,0 +1,4 @@
+# File /etc/cron.d/owst
+# adapt path names as required
+
+@reboot	pi	[ -x /opt/owst/tp.php ] && /opt/owst/tp.php

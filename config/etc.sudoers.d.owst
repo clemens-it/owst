@@ -1,0 +1,4 @@
+# File /etc/sudoers.d/owst
+
+www-data ALL = (pi) NOPASSWD: /usr/bin/atq, /usr/bin/atrm, /usr/bin/at
+

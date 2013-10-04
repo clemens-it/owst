@@ -3,7 +3,7 @@
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
 
-		$sql = "SELECT tp.id AS tpid, s.name AS sname, s.mode, tp.* "
+		$sql = "SELECT tp.id AS tpid, s.name AS sname, s.mode, s.ow_address, s.ow_pio, tp.* "
 			."FROM switch s LEFT OUTER JOIN time_program tp ON tp.switch_id = s.id "
 			."WHERE s.id = $sid";
 
@@ -11,14 +11,29 @@
 		($sth === FALSE) and 
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
+		//one wire: init
+		if (!init($cfg['ow_adapter'])) {
+			logEvent("cannot initialize 1-wire bus", LLERROR);
+			$errormsg .= "setmode: cannot initialize 1-wire bus.\n";
+		}
+
 		$data = array();
+		$sw_status = -999;
+		$tp_count = 0;
 		while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
+			if ($sw_status == -999)
+				$sw_status = get("/{$result['ow_address']}/{$result['ow_pio']}");
+			if ($result['tpid'] != "")
+				$tp_count++;
 			$result['forever_valid_from'] = ($result['valid_from'] == $cfg['forever_valid_from']);
 			$result['forever_valid_until'] = ($result['valid_until'] == $cfg['forever_valid_until']);
 			$data[] = $result;
 		}
 
+
 		$smarty->assign('data', $data);
+		$smarty->assign('tp_count', $tp_count);
+		$smarty->assign('sw_status', $sw_status);
 		$smarty->assign('sw_modes', array('on'=>'On', 'off'=>'Off', 'timer'=>'Timer'));
 		$smarty->assign('immediate_opt', array('switch_on_for'=>'Switch on for', 'switch_off_in'=>'Switch off in'));
 		$smarty->assign('sid', $sid);

@@ -5,9 +5,17 @@
 		($sth === FALSE) and 
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
+		//one wire: init
+		if (!init($cfg['ow_adapter'])) {
+			logEvent("cannot initialize 1-wire bus", LLERROR);
+			$errormsg .= "setmode: cannot initialize 1-wire bus.\n";
+		}
+
 		$data = array();
-		while ($result = $sth->fetch(PDO::FETCH_ASSOC)) 
+		while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
+			$result['status'] = get("/{$result['ow_address']}/{$result['ow_pio']}");
 			$data[] = $result;
+		}
 
 		$smarty->assign('data', $data);
 		$smarty_view = 'switch.tpl';
