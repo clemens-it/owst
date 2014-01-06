@@ -28,8 +28,8 @@
 		print "Usage: ".basename($argv[0])." [OPTION] \n";
 		print "\n";
 		print "\tOPTIONS:\n";
-		print "\t-m, --modechange     Call after time of a switch has been changed in database\n";
-		print "\t-r, --reprogram-all  Reprogram all AT jobs, usually all jobs should be deleted before by 'atq | cut -f1 | xargs atrm'\n";
+		print "\t-m, --modechange     Call after the mode (on/off/timer) of a switch has been changed in database\n";
+		print "\t-r, --reprogram-all  Reprogram all AT jobs, usually all jobs should be deleted before by 'atq | cut -f1 | xargs -r atrm'\n";
 		print "\t-h, --help           This help text\n";
 		print "\n";
 	} //displayHelp
@@ -77,11 +77,11 @@
 	function modeChangeTimer($dbh, &$new_ow_state, &$switch_mode) {
 		//in case a switch is in mode 'timer' there could be the following scenario: its mode was 
 		//previously 'on' or 'off'. When switching back to 'timer' we need to decide how to set the OW
-		//state depending on whether there are any time programs with active=1 or active=0 respectively
-		//set a corresponding state into the new_ow_state-array, which can be overridden in case a
-		//corresponding time program is about to change at the same call.
-		//This part of modechange (s.mode = timer) must be processed before cycling through the time programs
-		//it checks all the switches which are in mode 'timer' and determines and sets a new state according to
+		//state depending on whether there are any time programs with active=1 or active=0 respectively.
+		//This functions sets a corresponding state into the new_ow_state-array, which can be overridden 
+		//in case a corresponding time program is about to change at the same call.
+		//This part of modechange (s.mode = timer) must be processed before cycling through the time programs.
+		//It checks all the switches which are in mode 'timer' and determines and sets a new state according to
 		//the time programs
 
 		logEvent('ModeChangeTimer Checking for active time_programs', LLDEBUG);
@@ -126,7 +126,7 @@
 
 
 	function modeChangeOnOff($dbh, &$new_ow_state, &$switch_mode) {
-		//save the mode for all switches in non-time mode and create also a corresponding entry in array $new_ow_state
+		//Saves the mode for all switches in non-timer mode and create also a corresponding entry in array $new_ow_state
 		// as the next code block below will cycle through $new_ow_state
 		//All the due time programs need to be cycled through anyway, because they need to have their AT jobs reprogrammed.
 		//This part of modechange needs to be after cycling through the due time programs, in order to be able to overwrite

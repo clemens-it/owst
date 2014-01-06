@@ -1,4 +1,6 @@
 # File /etc/cron.d/owst
 # adapt path names as required
 
-@reboot	pi	[ -x /opt/owst/tp.php ] && /opt/owst/tp.php
+# at reboot empty the at-queue and call tp.php to reprogram all the at-jobs (-r) and to reset the
+# switches (-m) to their required states
+@reboot	pi	[ -x /opt/owst/tp.php ] && atq | cut -f1 | xargs -r atrm && /opt/owst/tp.php -mr

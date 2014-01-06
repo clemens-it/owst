@@ -1,0 +1,6 @@
+lib/Smarty/
+smarty/cache/
+smarty/templates_c/
+tpl
+img/not_used/
+
