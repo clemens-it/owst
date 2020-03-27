@@ -3,7 +3,7 @@
 	ini_set('display_errors', 1);
 	require_once 'lib/Smarty/Smarty.class.php';
 	//define variable with filename of timer program to pass to config.php
-	$cfg_executable = "/home/pi/timer-dev/tp.php";
+	$cfg_executable = "/opt/owst/tp.php";
 	require_once 'include/config.php';
 	require_once 'include/log.php';
 	require_once 'include/functions.php';
