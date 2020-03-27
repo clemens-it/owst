@@ -69,5 +69,3 @@
 				$smarty->display($v);
 		$smarty->display('footer.tpl');
 	}
-
-?>

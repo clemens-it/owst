@@ -485,4 +485,3 @@
 			$smarty_view = 'messages.tpl';
 		}
 	} //immediate
-?>

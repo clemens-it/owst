@@ -23,5 +23,3 @@ if (!extension_loaded("libowphp")) {
 	if (!dl("libowphp.so"))
 		die( "dl(): File '$extensionFile' could not be loaded.\n" );
 }
-
-?>

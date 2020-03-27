@@ -41,7 +41,3 @@ function logEvent($msg, $msg_log_level=LLWARN) {
 		flock($log_fh, LOCK_UN);
 	}
 } //function logEvent
-
-
-
-?>

@@ -29,5 +29,3 @@ function programAt($cmd) {
 	}
 	return ($retval == 0);
 } //function program_at
-
-?>

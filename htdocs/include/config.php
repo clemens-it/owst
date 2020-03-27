@@ -132,4 +132,3 @@
 		else
 			return FALSE;
 	} //wrapCheckDate
-?>

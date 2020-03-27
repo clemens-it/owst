@@ -8,5 +8,3 @@
 		$smarty->assign('data', implode("\n", $output));
 		$smarty_view = 'at.tpl';
 	}
-
-?>
