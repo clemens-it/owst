@@ -2,7 +2,7 @@
 	if ($_REQUEST['subaction'] == 'list') {
 		$sql = "SELECT * FROM switch";
 		$sth = $dbh->query($sql);
-		($sth === FALSE) and 
+		($sth === FALSE) and
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
 		//one wire: init
@@ -27,7 +27,7 @@
 	if ($_REQUEST['subaction'] == 'setmode') {
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
-		
+
 		$allowed_modes = array('on'=>'On', 'off'=>'Off', 'timer'=>'Timer');
 		if (isset($_GET['switch_mode']) && isset($allowed_modes[$_GET['switch_mode']]))
 			$switch_mode = $_GET['switch_mode'];
@@ -36,7 +36,7 @@
 
 		$sql = "UPDATE switch SET mode = ". $dbh->quote($switch_mode) ." WHERE id = {$sid}";
 		$ra = $dbh->exec($sql);
-		($ra === FALSE) and 
+		($ra === FALSE) and
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
 		if ($ra <> 1)

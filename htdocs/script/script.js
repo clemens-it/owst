@@ -52,7 +52,7 @@ function confirmLink(link, confirmMsg, alt_link) {
 function toggleDisplay(eID) {
 	var ele;
 	ele = document.getElementById(eID);
-	if (ele.style.display == 'none') 
+	if (ele.style.display == 'none')
 		ele.style.display = 'block';
 	else
 		ele.style.display = 'none';

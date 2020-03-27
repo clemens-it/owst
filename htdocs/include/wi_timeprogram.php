@@ -8,7 +8,7 @@
 			."WHERE s.id = $sid";
 
 		$sth = $dbh->query($sql);
-		($sth === FALSE) and 
+		($sth === FALSE) and
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
 		//one wire: init
@@ -51,7 +51,7 @@
 			."WHERE tp.id = $tpid";
 
 		$sth = $dbh->query($sql);
-		($sth === FALSE) and 
+		($sth === FALSE) and
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
 		$data = array();
@@ -59,7 +59,7 @@
 		if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
 			$result['forever_valid_from'] = ($result['valid_from'] == $cfg['forever_valid_from']);
 			$result['forever_valid_until'] = ($result['valid_until'] == $cfg['forever_valid_until']);
-			$result['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' : 
+			$result['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' :
 				date('Y-m-d H:i:s', $result['time_switched_on']));
 			$runtimed = intval( (time()-$result['time_switched_on']) / 86400);
 			$result['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
@@ -111,22 +111,22 @@
 					$errormsg .= "'{$v['name']}' does not meet format or requirements: {$v['format']}\n";
 					continue;
 				}
-				if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k])) 
+				if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k]))
 					$errormsg .= "'{$v['name']}' did not pass validity check\n";
 			}
 		} //foreach
-		
+
 		//compile and execute SQL update statement only if there are no errors
 		if (empty($errormsg)) {
 			$sql = "UPDATE time_program SET ";
 			foreach ($columns as $k => $v) {
-				$sql .= "$k = ". $dbh->quote($data[$k]) .", "; 
+				$sql .= "$k = ". $dbh->quote($data[$k]) .", ";
 			}
 			$sql = substr($sql, 0, -2);
 			$sql .= " WHERE id = {$tpid}";
-			
+
 			$ra = $dbh->exec($sql);
-			($ra === FALSE) and 
+			($ra === FALSE) and
 				die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
 			if ($ra == 1)
@@ -157,12 +157,12 @@
 				."FROM time_program tp INNER JOIN switch s ON tp.switch_id = s.id "
 				."WHERE tp.id = $tpid";
 			$sth = $dbh->query($sql);
-			($sth === FALSE) and 
+			($sth === FALSE) and
 				die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 			//there's only one record
 			if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
 				//set calculated values - based from 'read-only' columns from the query result
-				$data['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' : 
+				$data['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' :
 					date('Y-m-d H:i:s', $result['time_switched_on']));
 				$runtimed = intval( (time()-$result['time_switched_on']) / 86400);
 				$data['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
@@ -217,7 +217,7 @@
 		@$data['delete_after_becoming_invalid'] = ($data['delete_after_becoming_invalid'] == 'on' ?  1 : 0);
 		$daysum = 0;
 		for ($i=0; $i<=6; $i++) {
-			@$data['d'.$i] = (empty($data['d'.$i]) ? 0 : 1); 
+			@$data['d'.$i] = (empty($data['d'.$i]) ? 0 : 1);
 			$daysum += $data['d'.$i];
 		}
 		$columns = $cfg['dd']['time_program'];
@@ -235,21 +235,21 @@
 					$errormsg .= "'{$v['name']}' does not meet format or requirements: {$v['format']}\n";
 					continue;
 				}
-				if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k])) 
+				if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k]))
 					$errormsg .= "'{$v['name']}' did not pass validity check\n";			}
 		} //foreach
-		
+
 		//compile SQL statement
 		if (empty($errormsg)) {
 			$sql = "INSERT INTO time_program (". implode(', ', array_keys($columns)) .") VALUES (";
 			foreach ($columns as $k => $v) {
-				$sql .= $dbh->quote($data[$k]) .", "; 
+				$sql .= $dbh->quote($data[$k]) .", ";
 			}
 			$sql = substr($sql, 0, -2);
 			$sql .= ")";
-			
+
 			$ra = $dbh->exec($sql);
-			($ra === FALSE) and 
+			($ra === FALSE) and
 				die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 			if ($ra <> 1)
 				$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";
@@ -263,7 +263,7 @@
 				owSwitchTimerControl($dbh);
 			}
 		}
-		
+
 		if (empty($errormsg)) {
 			$redirect = TRUE;
 			$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
@@ -293,17 +293,17 @@
 		$errormsg = $msg = '';
 		$sql = "DELETE FROM time_program WHERE id = " .$dbh->quote($tpid);
 		$ra = $dbh->exec($sql);
-		($ra === FALSE) and 
+		($ra === FALSE) and
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 		if ($ra <> 1)
 			$errormsg .= "Delete: Rows affected by query does not equal to 1, but is $ra\n";
 		else {
 			logEvent("Time program ID $tpid has been deleted", LLINFO_ACTION);
 			//emptying and repogramming of the at queue isn't really necessary
-			//at jobs of deleted time program will execute the script and nothing 
+			//at jobs of deleted time program will execute the script and nothing
 			//will happen
 		}
-		
+
 		if (empty($errormsg)) {
 			$redirect = TRUE;
 			$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
@@ -326,7 +326,7 @@
 			."WHERE tp.id = $tpid";
 
 		$sth = $dbh->query($sql);
-		($sth === FALSE) and 
+		($sth === FALSE) and
 			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 
 		$data = array();
@@ -334,7 +334,7 @@
 		if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
 			$result['forever_valid_from'] = ($result['valid_from'] == $cfg['forever_valid_from']);
 			$result['forever_valid_until'] = ($result['valid_until'] == $cfg['forever_valid_until']);
-			$result['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' : 
+			$result['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' :
 				date('Y-m-d H:i:s', $result['time_switched_on']));
 			$runtimed = intval( (time()-$result['time_switched_on']) / 86400);
 			$result['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
@@ -360,7 +360,7 @@
 		($tpid > 0) or die("Time Program ID is $tpid");
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
-		
+
 		@$intr_from = $_GET['intr_from'];
 		@$intr_until = $_GET['intr_until'];
 
@@ -369,7 +369,7 @@
 		wrapCheckDate($intr_until) or $errormsg .= "'Interrupt until' must be a valid date in the format yyyy-mm-dd\n";
 		(empty($errormsg) && $intr_from >= $intr_until) and $errormsg .= "'Interrupt from' must be earlier then 'Interrupt until'\n";
 		/* TODO: get data from database and check existing valid_from and valid_until dates
-			valid_from < intr_from,intr_until < valid_until, 
+			valid_from < intr_from,intr_until < valid_until,
 		*/
 		if (empty($errormsg)) {
 			$columns = $cfg['dd']['time_program'];
@@ -379,14 +379,14 @@
 			$sql = "INSERT INTO time_program (". implode(', ', array_keys($columns)) .", valid_from, active, time_switched_on) ".
 					"SELECT ". implode(', ', array_keys($columns)) .", {$intr_until}, 0, 0 FROM time_program WHERE id = {$tpid}";
 			$ra = $dbh->exec($sql);
-			($ra === FALSE) and 
+			($ra === FALSE) and
 				die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 			if ($ra <> 1)
 				$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";
 			else {
 				$nid = $dbh->lastInsertId();
 				logEvent("Interrupt from {$intr_from} until {$intr_until}: New time program has been inserted. ID $nid", LLINFO_ACTION);
-				//reprogram at for net time program and call owSwitchTimerControl in the unlikely case 
+				//reprogram at for net time program and call owSwitchTimerControl in the unlikely case
 				//the time program should get active immediately
 				logEvent("Programming AT queue after inserting time program", LLINFO_ACTION);
 				$rv1 = reprogramAt($dbh, $nid);
@@ -396,7 +396,7 @@
 		if (empty($errormsg)) {
 			$sql = "UPDATE time_program SET valid_until = {$intr_from}, delete_after_becoming_invalid = 1 WHERE id = {$tpid}";
 			$ra = $dbh->exec($sql);
-			($ra === FALSE) and 
+			($ra === FALSE) and
 				die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
 			if ($ra <> 1)
 				$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";

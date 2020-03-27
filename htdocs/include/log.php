@@ -24,7 +24,7 @@ function logEvent($msg, $msg_log_level=LLWARN) {
 	//check if logging is turned on at all
 	if (empty($cfg['log_file']))
 		return;
-	
+
 	//check whether current log_level wants this particular Event to be logged
 	if ($msg_log_level > $log_level)
 		return;

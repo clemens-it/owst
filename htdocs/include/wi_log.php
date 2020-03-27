@@ -1,7 +1,7 @@
 <?php
 	if ($_REQUEST['subaction'] == 'show') {
 		$filter_loglevel = LLINFO;
-		if (isset($_REQUEST['filter_loglevel'])) 
+		if (isset($_REQUEST['filter_loglevel']))
 			$filter_loglevel = intval($_REQUEST['filter_loglevel']);
 		//override if invalid value
 		if ($filter_loglevel < LLERROR || $filter_loglevel > LLDEBUG)
@@ -9,7 +9,7 @@
 
 		if (!$cfg['use_syslog']) {
 			$fh = fopen($cfg['log_file'], 'r');
-			if ($fh === FALSE) 
+			if ($fh === FALSE)
 				$smarty->assign('errormsg', "Can't open log file");
 			else {
 
@@ -42,5 +42,5 @@
 			$smarty_view = 'log.tpl';
 
 		}
-	
+
 	}

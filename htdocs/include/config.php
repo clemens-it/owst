@@ -6,7 +6,7 @@
 	$cfg['php_lib_path'] = '/usr/lib/php5/20100525+lfs';
 	$cfg['ow_adapter'] = 'localhost:4304';
 
-	//path settings 
+	//path settings
 	$cfg['libdir'] = '/var/lib/owst';
 	$cfg['logdir'] = '/var/log';
 
@@ -20,7 +20,7 @@
 	$cfg['forever_valid_until'] = '2099-01-01';
 
 
-	//set if you want logging. if the setting contains no slashes it will be 
+	//set if you want logging. if the setting contains no slashes it will be
 	//used as a tag and the message will go to syslog. if log_file is empty no logging occurs
 	$cfg['log_file']  = $cfg['logdir']. '/owst.log';
 	$cfg['lock_file'] = $cfg['libdir']. '/owst.lock';
@@ -30,13 +30,13 @@
 	// www-data ALL = (pi) NOPASSWD: /usr/bin/atq
 	$cfg['at_user'] = 'pi';
 
-	//at command line 
+	//at command line
 	//$cfg['at_cmd_line'] = "echo $cfg_executable | at ";
-	//At tries to get back into the current working directory at execution time. if it takes 
+	//At tries to get back into the current working directory at execution time. if it takes
 	//the cwd of the web script, at will fail at execution because the at_user might not have
 	//the rights to access the directory of the web script
 	$cfg['at_cmd_line'] = "cd /; echo $cfg_executable | sudo -nu ".escapeshellarg($cfg['at_user']) ." at ";
-	
+
 	//$cfg['atq_cmd_line'] = "atq | sort -k6n -k3M -k4n -k5n";
 	$cfg['atq_cmd_line'] = "(sudo -nu ".escapeshellarg($cfg['at_user']) ." atq | sort -k6n -k3M -k4n -k5n) 2>&1";
 
@@ -119,10 +119,10 @@
 			id, active, time_switched_on
 		*/
 		);
-			
-	
+
+
 	function wrapCheckDate($datestr) {
-		//wrapper for checkdate - splits a date into year, month, day from a string and 
+		//wrapper for checkdate - splits a date into year, month, day from a string and
 		//feeds it to checkdate
 		unset($match);
 		if (preg_match('/^(1999|2\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/', $datestr, $match)) {

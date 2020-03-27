@@ -12,6 +12,6 @@ $lock_fh = FALSE;
 		global $lock_fh;
 		if ($lock_fh !== FALSE) {
 			flock($lock_fh, LOCK_UN);
-			fclose($lock_fh); 
+			fclose($lock_fh);
 		}
 	}

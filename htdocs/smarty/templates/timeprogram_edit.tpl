@@ -37,19 +37,19 @@ New Time Program
 	<div class="timeprogramdetail">
 		Name:<br/>
 		<input type="text" name="tp[name]" value="{$data.name}" />
-		
-		<hr /> 
+
+		<hr />
 		Time:<br />
 		<input type="text" name="tp[switch_on_time]" value="{$data.switch_on_time}" maxlength="5" size="5"> -&nbsp;
-		<input type="text" name="tp[switch_off_time]" value="{$data.switch_off_time}" maxlength="5" size="5"> 
-		
+		<input type="text" name="tp[switch_off_time]" value="{$data.switch_off_time}" maxlength="5" size="5">
+
 		<hr />
 		Valid from until:<br />
 		<div style="float:left">
-			<input type="text" id="valid_from" name="tp[valid_from]" value="{$data.valid_from}" maxlength="10" 
+			<input type="text" id="valid_from" name="tp[valid_from]" value="{$data.valid_from}" maxlength="10"
 				size="10" {if $data.forever_valid_from}readonly="readonly"{/if} />
 			<button type="button" id="bvalid_from">...</button><br />
-			<input type="checkbox" name="tp[forever_valid_from]" id="forever_valid_from" 
+			<input type="checkbox" name="tp[forever_valid_from]" id="forever_valid_from"
 				{if $data.forever_valid_from}checked="checked"{/if} onclick="date_no_limit(this,'valid_from');" />
 				<label for="forever_valid_from">no limitation</label>
 		</div>
@@ -57,10 +57,10 @@ New Time Program
 			&nbsp;-&nbsp;
 		</div>
 		<div>
-			<input type="text" id="valid_until" name="tp[valid_until]" value="{$data.valid_until}" maxlength="10" 
+			<input type="text" id="valid_until" name="tp[valid_until]" value="{$data.valid_until}" maxlength="10"
 				size="10" {if $data.forever_valid_until}readonly="readonly"{/if} />
 			<button type="button" id="bvalid_until">...</button><br />
-			<input type="checkbox" name="tp[forever_valid_until]" id="forever_valid_until" 
+			<input type="checkbox" name="tp[forever_valid_until]" id="forever_valid_until"
 				{if $data.forever_valid_until}checked="checked"{/if} onclick="date_no_limit(this,'valid_until');" />
 				<label for="forever_valid_until">no limitation</label>
 		</div>
@@ -91,7 +91,7 @@ New Time Program
 		<input type="hidden" name="tp[d6]" id="day6" value="{$data.d6}" />
 
 		<hr />
-		<input type="checkbox" id="delete_after_becoming_invalid" name="tp[delete_after_becoming_invalid]" 
+		<input type="checkbox" id="delete_after_becoming_invalid" name="tp[delete_after_becoming_invalid]"
 			{if $data.delete_after_becoming_invalid} checked="checked"{/if} /> <label for="delete_after_becoming_invalid">Delete after becoming invalid</label>
 
 		<hr />
@@ -104,7 +104,7 @@ New Time Program
 
 		{if $form_mode == 'edit'}
 			<hr />
-			Current status: 
+			Current status:
 			{if $data.active}
 				<img src="img/ledgreen.png" width="20" height="20" alt="On" title="On" /> active
 			{else}

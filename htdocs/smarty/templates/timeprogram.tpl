@@ -18,7 +18,7 @@
 			<input type="hidden" name="subaction" value="setmode" />
 		</form>
 		<br style="clear:both;" />
-		Current Status: 
+		Current Status:
 			{if $sw_status==1}
 				<img src="img/ledgreen.png" width="24" height="24" alt="Current status: On" title="Current status: On" />
 			{elseif $sw_status==0}
@@ -46,7 +46,7 @@
 				<a href="{$scriptname}?action=timeprogram&subaction=edit&tpid={$v.tpid}">
 				<div class="timeprogram" style="float:left;">
 					<div style="float:left; width:80%">
-						<strong>{$v.name}</strong> <br /> 
+						<strong>{$v.name}</strong> <br />
 						{$v.switch_on_time} - {$v.switch_off_time}<br />
 						{if $v.forever_valid_from && $v.forever_valid_until}
 							always

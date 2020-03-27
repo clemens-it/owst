@@ -107,20 +107,20 @@ a .divbutton  {
 .OOoff, .OOon {
 	width:32px;
 	height:32px;
-	padding:1px 2px 3px 1px;	
+	padding:1px 2px 3px 1px;
 	font-size:12px;
 	background:lightgray;
-	text-align:center;	
+	text-align:center;
 }
 .OOoff div, .OOon div {
 	width:18px;
 	height:18px;
-	min-height:18px;	
+	min-height:18px;
 	overflow:hidden;
 	border-top:1px solid gray;
 	border-right:1px solid white;
 	border-bottom:1px solid white;
-	border-left:1px solid gray;			
+	border-left:1px solid gray;
 	margin:0 auto;
 }
 .OOon div {
