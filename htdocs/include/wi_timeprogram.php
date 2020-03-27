@@ -1,4 +1,6 @@
 <?php
+	require_once 'wi_helpers.php';
+
 	if ($_REQUEST['subaction'] == 'list') {
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
@@ -419,64 +421,57 @@
 	if ($_REQUEST['subaction'] == 'immediate') {
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
-		
+
 		@$immtime = $_GET['immtime'];
 		@$immaction = $_GET['immaction'];
 		$errormsg = '';
-			
-		preg_match('/^([01]\d|2[0-3]):([0-5]\d)$/', $immtime, $match) or
-			$errormsg .= "Time for immediate action must be in the format hh:mm and less than 24hours\n";
-		preg_match('/^switch_(off_in|on_for)$/', $immaction, $match) or
+
+		//time input is possible in two formats: hh:mm and a decimal value which is interpreted in hours
+		//hh:mm format: hh or mm can be given also in a single digit, like 2:30 (=02:30) or 1:5 (=01:05)
+		// hh or mm can be also omitted if zero: e.g. :30 (=00:30), 4: (=04:00), : (=00:00)
+		//
+		// decimal number: decimal separator is either comma or dot. e.g. 1.5 (=01:30), 2,75 (=02:45), 4 (=04:00)
+		$format_hhmm = preg_match('/^([01]?\d|2[0-3])?:([0-5]?\d)?$/', $immtime);
+		$format_hdec = preg_match('/^([01]?\d|2[0-3])?([,.]\d{1,2})?$/', $immtime);
+
+		if (!$format_hhmm && !$format_hdec)
+			$errormsg .= "Time for immediate action must be in the format hh:mm or ".
+				"a decimal number (in hours) and in any case less than 24hours\n";
+
+		preg_match('/^switch_(off_in|on_for)$/', $immaction) or
 			$errormsg .= "Immediate action must be either 'switch_off_in' or 'switch_on_for'\n";
 
-		$t = time(); $wd = date('w', $t);
-		$ontime = date('G', $t)*60 + date('i', $t);
-		$immmin = substr($immtime, 0, 2)*60 + substr($immtime, 3, 2);
-		$offtime = ($ontime + $immmin) % 1440;
-		$offtime = sprintf('%02d:%02d',floor($offtime/60), $offtime%60);
-		print "$ontime - $immmin - $offtime<br>";
-		$data = array(
-			'switch_id'         => $sid,
-			'name'              => 'Immediate: '. ($immaction == 'switch_off_in' ? 'OFF in' : 'ON for'). " {$immtime}",
-			'switch_on_time'    => date('H:i', $t),
-			'switch_off_time'   => $offtime,
-			'valid_from'        => date('Y-m-d', $t),
-			'valid_until'       => date('Y-m-d', $t),
-			"d{$wd}"            => 1,                //default value for dx is 0, so just set the one we need
-			'active'            => ($immaction == 'switch_off_in' ? 1 : 0),
-			'time_switched_on'  => $t,               //time_switched_on is not considered when switching on
-			'switch_off_priority'                      => 'runtime',
-			'delete_after_becoming_invalid'            => 1,
-			'override_other_programs_when_turning_off' => ($immaction == 'switch_off_in' ? 1 : 0),
-		);
+		if ($errormsg == '') {
+			//convert given run time to minutes
+			$immmin = userTimeToMin($immtime);
 
-		foreach ($data as $k => $v)
-			$data[$k] = $dbh->quote($v);
-		$sql = "INSERT INTO time_program (". implode(', ', array_keys($data)) .") VALUES (".
-			implode(', ', $data) .")";
+			$t = time();
+			$wd = date('w', $t);
+			$ontime = date('G', $t)*60 + date('i', $t);
+			$offtime = ($ontime + $immmin) % 1440;
 
-		$ra = $dbh->exec($sql);
-		($ra === FALSE) and 
-			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
-		if ($ra <> 1)
-			$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";
-		else {
-			$nid = $dbh->lastInsertId();
-			logEvent("Immediate time program has been inserted. ID $nid", LLINFO_ACTION);
-			if ($immaction == 'switch_off_in') {
-				//reprogram AT for new job - switching off
-				logEvent("Programming AT queue after inserting time program", LLINFO_ACTION);
-				$rv1 = reprogramAt($dbh, $nid);
-				if (!$rv1)
-					$errormsg .= "Problem occurred during AT-reprogramming. Please check the log\n";
-			}
-			else {
-				//switch on by calling owSwitchTimerControl. AT will be also programmed by that routine
-				owSwitchTimerControl($dbh);
-			}
-		}
+			//calculations are done, format ontime and offtime for database
+			$ontime = date('H:i', $t);
+			$offtime = sprintf('%02d:%02d',floor($offtime/60), $offtime%60);
+			$data = array(
+				'switch_id'         => $sid,
+				'name'              => 'Immediate: '. ($immaction == 'switch_off_in' ? 'OFF in' : 'ON for'). " {$immtime}",
+				'switch_on_time'    => $ontime,
+				'switch_off_time'   => $offtime,
+				'valid_from'        => date('Y-m-d', $t),
+				'valid_until'       => date('Y-m-d', $t),
+				"d{$wd}"            => 1,                //default value for dx is 0, so just set the one we need
+				'active'            => ($immaction == 'switch_off_in' ? 1 : 0),
+				'time_switched_on'  => $t,               //time_switched_on is not considered when switching on
+				'switch_off_priority'                      => 'runtime',
+				'delete_after_becoming_invalid'            => 1,
+				'override_other_programs_when_turning_off' => ($immaction == 'switch_off_in' ? 1 : 0),
+			);
 
-		if (empty($errormsg)) {
+			immediateInsertAndActivate($dbh, $data, $immaction);
+		} //if empty errormsg
+
+		if ($errormsg == '') {
 			$redirect = TRUE;
 			$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
 		}
@@ -484,4 +479,78 @@
 			$smarty->assign('errormsg', $errormsg);
 			$smarty_view = 'messages.tpl';
 		}
-	} //immediate
+	} //subaction == immediate
+
+
+
+	if ($_REQUEST['subaction'] == 'immediate_str') {
+		@$sid = intval($_GET['sid']);
+		($sid > 0) or die("Switch ID is $sid");
+
+		@$immstr = $_GET['immstr'];
+		$errormsg = '';
+
+		$rxhhmm = '([01]?\d|2[0-3])?:([0-5]?\d)?';
+		$rxhdec = '([01]?\d|2[0-3])?([,.]\d{1,2})?';
+		$rxtm = "($rxhhmm|$rxhdec)";
+		$immstr = strtolower($immstr);
+		preg_match("/^(on)\s+in\s+$rxtm\s+for\s+$rxtm\$|^(off)\s+in\s+$rxtm\s*(for.*)?$/", $immstr, $match) or
+			$errormsg .= htmlspecialchars("Invalid command. Must be either 'on in <tm> for <tm>' or 'off in <tm>'. ".
+				"Time must be in the format hh:mm or a decimal number (in hours) and in any case less than 24hours\n");
+
+		if ($errormsg == '') {
+			if($match[1] == 'on') {
+				$tm_start = userTimeToMin($match[2]);
+				$tm_duration = userTimeTomin($match[7]);
+				$immaction = 'switch_on_for';
+				$name = "Immediate: ON in {$match[2]} for {$match[7]}";
+			}
+			elseif($match[12] == 'off') {
+				$tm_duration = userTimeToMin($match[13]);
+				$immaction = 'switch_off_in';
+				$name = "Immediate: OFF in {$match[13]}";
+			}
+
+			$tday = $t = time();
+			$ontime = date('G', $t)*60 + date('i', $t);
+			if ($immaction == 'switch_on_for') {
+				$ontime = $ontime + $tm_start;
+				//check if carry over to next day is required
+				if ($ontime >= 1440) {
+					$tday += 86400;
+					$ontime %= 1440;
+				}
+			}
+			$wd = date('w', $tday);
+			$offtime = ($ontime + $tm_duration) % 1440;
+
+			//calculations are done, format ontime and offtime for database
+			$ontime  = sprintf('%02d:%02d',floor($ontime/60),  $ontime%60);
+			$offtime = sprintf('%02d:%02d',floor($offtime/60), $offtime%60);
+			$data = array(
+				'switch_id'         => $sid,
+				'name'              => $name,
+				'switch_on_time'    => $ontime,
+				'switch_off_time'   => $offtime,
+				'valid_from'        => date('Y-m-d', $tday),
+				'valid_until'       => date('Y-m-d', $tday),
+				"d{$wd}"            => 1,                //default value for dx is 0, so just set the one we need
+				'active'            => ($immaction == 'switch_off_in' ? 1 : 0),
+				'time_switched_on'  => ($immaction == 'switch_off_in' ? $t : 0),  //time_switched_on is not considered when switching on
+				'switch_off_priority'                      => 'runtime',
+				'delete_after_becoming_invalid'            => 1,
+				'override_other_programs_when_turning_off' => ($immaction == 'switch_off_in' ? 1 : 0),
+			);
+
+			immediateInsertAndActivate($dbh, $data, $immaction);
+		} //if empty errormsg
+
+		if ($errormsg == '') {
+			$redirect = TRUE;
+			$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
+		}
+		else {
+			$smarty->assign('errormsg', $errormsg);
+			$smarty_view = 'messages.tpl';
+		}
+	} //subaction == immediate_str

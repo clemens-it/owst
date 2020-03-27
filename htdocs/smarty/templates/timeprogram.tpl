@@ -25,14 +25,25 @@
 				<img src="img/ledred.png" width="24" height="24" alt="Current status: Off" title="Current status: Off" />
 			{/if}
 		<br style="clear:both;" /><br />
+		<div style="line-height:1.9em">
+		Immediate:<br />
 		<form action="{$scriptname}">
-			Immediate: {html_options name="immaction" options=$immediate_opt}
-			<input type="text" name="immtime" value="00:30" maxlength="5" style="width:3em;"> (hh:mm)&nbsp;
-			<input type="submit" name="submit" value="Go" />
+			&bullet; {html_options name="immaction" options=$immediate_opt}
+			<input type="text" name="immtime" value="00:30" maxlength="5" style="width:3em;"> (hh:mm | dec)&nbsp;
 			<input type="hidden" name="sid" value="{$sid}" />
 			<input type="hidden" name="action" value="timeprogram" />
 			<input type="hidden" name="subaction" value="immediate" />
+			<input type="submit" name="submit" value="Go" />
+			<br />
 		</form>
+		<form action="{$scriptname}">
+			&bullet; switch <input type="text" name="immstr" value="on in 00:30 for 02:15" maxlength="25" style="width:10em;"> &nbsp;
+			<input type="submit" name="submit" value="Go" />
+			<input type="hidden" name="sid" value="{$sid}" />
+			<input type="hidden" name="action" value="timeprogram" />
+			<input type="hidden" name="subaction" value="immediate_str" />
+		</form>
+		</div>
 	</div>
 
 	<div style="margin-top:1em;">
