@@ -49,11 +49,14 @@ Configuration for cron job, log rotation, php fpm
 
 
 Create and set permissions for web service directory
+
     mkdir -p /srv/www/owst
     chown root.www-data /srv/www
     chmod o+x /srv/www/
     chown owst.www-data /srv/www/owst/
     chmod 0750 /srv/www/owst
 
+
 Using sudo instead of a dedicated PHP FPM
+
     config/etc.sudoers.d.owst
