@@ -8,7 +8,7 @@
 	require_once 'include/log.php';
 	require_once 'include/functions.php';
 	require_once 'include/lock.php';
-	//loading of OWphp extension must be done in php.ini
+	//OWphp extension must be loaded in php.ini
 
 	$log_level = LLDEBUG;
 	//$log_level = LLINFO;

@@ -3,7 +3,6 @@
 	$cfg = array();
 
 	//one wire settings
-	$cfg['php_lib_path'] = '/usr/lib/php5/20100525+lfs';
 	$cfg['ow_adapter'] = 'localhost:4304';
 
 	//path settings
