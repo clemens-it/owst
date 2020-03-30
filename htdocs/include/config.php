@@ -7,7 +7,7 @@
 
 	//path settings
 	$cfg['libdir'] = '/var/lib/owst';
-	$cfg['logdir'] = '/var/log';
+	$cfg['logdir'] = '/var/log/owst';
 
 	//database settings
 	$cfg['dsn'] = 'sqlite:' .$cfg['libdir']. '/owst.sq3';
