@@ -1,7 +1,7 @@
 <?php
 	error_reporting(E_ALL);
 	ini_set('display_errors', 1);
-	require_once 'lib/Smarty/Smarty.class.php';
+	require_once 'smarty3/Smarty.class.php';
 	//define variable with filename of timer program to pass to config.php
 	$cfg_executable = "/opt/owst/tp.php";
 	require_once 'include/config.php';
