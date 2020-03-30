@@ -1,0 +1,10 @@
+/var/log/owst/owst.log {
+	weekly
+	rotate 3
+	minsize 4M
+	compress
+	missingok
+	notifempty
+	create 0660 owst root
+}
+
