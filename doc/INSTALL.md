@@ -22,7 +22,7 @@ With the following commands owst will be installed in the following places:
 * Command line interface (CLI): /opt/owst
 
 
-###Create dedicated user owst, create and set permissions for home directory, database, log file.
+### Create dedicated user owst, create and set permissions for home directory, database, log file.
 
     useradd --home /var/lib/owst --shell /bin/bash --system owst
     mkdir -m 0750 -p /var/lib/owst
@@ -36,14 +36,14 @@ With the following commands owst will be installed in the following places:
     chown -R owst.root /var/log/owst/
 
 
-###Create directory for command line interface and copy files.
+### Create directory for command line interface and copy files.
 
     mkdir -p -m 0755 /opt/owst
     cp -aL cli/* /opt/owst/
     chown -R owst.root /opt/owst
 
 
-###Configuration for cron job, log rotation, php fpm.
+### Configuration for cron job, log rotation, php fpm.
 
     install -m 0644 -o root -g root config/etc.cron.d.owst /etc/cron.d/owst
     install -m 0644 -o root -g root config/etc.logrotate.d.owst /etc/logrotate.d/owst
@@ -55,7 +55,7 @@ With the following commands owst will be installed in the following places:
     systemctl restart php7.3-fpm.service
 
 
-###Create and set permissions for web service directory, copy file for web interface.
+### Create and set permissions for web service directory, copy file for web interface.
 
     mkdir -m 0750 -p /srv/www/owst
     chown root.www-data /srv/www
@@ -64,7 +64,7 @@ With the following commands owst will be installed in the following places:
     cp htdocs/* /srv/www/owst/
 
 
-##Configure nginx
+## Configure nginx
 Edit the site file through which you want to access the owst web interface. In
 case of a default installation this would be /etc/nginx/sites-enabled/default.
 Add the following snippet to the server section. Restart nginx afterwards.
