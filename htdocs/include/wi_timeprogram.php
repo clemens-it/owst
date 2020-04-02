@@ -39,7 +39,8 @@
 		$smarty->assign('sw_modes', array('on'=>'On', 'off'=>'Off', 'timer'=>'Timer'));
 		$smarty->assign('immediate_opt', array('switch_on_for'=>'Switch on for', 'switch_off_in'=>'Switch off in'));
 		$smarty->assign('sid', $sid);
-		$smarty_view = 'timeprogram.tpl';
+		$smarty->assign('errormsg', $errormsg);
+		$smarty_view = 'messages.tpl;timeprogram.tpl';
 	} // subaction == list
 
 
