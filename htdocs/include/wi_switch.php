@@ -1,5 +1,7 @@
 <?php
 	if ($_REQUEST['subaction'] == 'list') {
+		$errormsg = '';
+
 		$sql = "SELECT * FROM switch";
 		$sth = $dbh->query($sql);
 		($sth === FALSE) and
@@ -18,7 +20,8 @@
 		}
 
 		$smarty->assign('data', $data);
-		$smarty_view = 'switch.tpl';
+		$smarty->assign('errormsg', $errormsg);
+		$smarty_view = 'messages.tpl;switch.tpl';
 
 	} //subaction == list
 
@@ -27,6 +30,7 @@
 	if ($_REQUEST['subaction'] == 'setmode') {
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
+		$errormsg = '';
 
 		$allowed_modes = array('on'=>'On', 'off'=>'Off', 'timer'=>'Timer');
 		if (isset($_GET['switch_mode']) && isset($allowed_modes[$_GET['switch_mode']]))
