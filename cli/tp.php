@@ -1,4 +1,4 @@
-#!/usr/bin/php5
+#!/usr/bin/php
 <?php
 /*
 You will be needing the following deb packages: owserver libow-php5 php5-cli sqlite3 php5-sqlite at
