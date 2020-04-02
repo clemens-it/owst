@@ -38,9 +38,8 @@
 			//loglevels defined in include/log.php
 			$smarty->assign('log_levels', $log_levels);
 			$smarty->assign('filter_loglevel', $filter_loglevel);
-			$smarty->error_reporting = E_ALL & ~E_NOTICE;
 			$smarty_view = 'log.tpl';
 
-		}
+		} //if use_syslog
 
-	}
+	} //if subaction == show

@@ -4,6 +4,7 @@
 	if ($_REQUEST['subaction'] == 'list') {
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
+		$errormsg = '';
 
 		$sql = "SELECT tp.id AS tpid, s.name AS sname, s.mode, s.ow_address, s.ow_pio, tp.* "
 			."FROM switch s LEFT OUTER JOIN time_program tp ON tp.switch_id = s.id "
@@ -101,7 +102,7 @@
 		//we do not need to change the following columns
 		unset($columns['switch_id']);
 
-		$errormsg = "";
+		$errormsg = '';
 		$rv1 = $rv2 = TRUE;
 
 		//check data integrity
@@ -196,13 +197,11 @@
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
 
-
 		$smarty->assign('sid', $sid);
 		$smarty->assign('form_mode', 'insert');
 		$smarty->assign('so_priorities', array('runtime'=>'Runtime', 'time'=>'Switch off time'));
 		$smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
 		$smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
-		$smarty->error_reporting = E_ALL & ~E_NOTICE;
 		$smarty_view = 'timeprogram_edit.tpl';
 	} // subaction == addnew
 
@@ -225,7 +224,7 @@
 		}
 		$columns = $cfg['dd']['time_program'];
 
-		$errormsg = "";
+		$errormsg = '';
 		//check data integrity
 		if ($daysum == 0)
 			$errormsg = "Time program needs to be active for at least one weekday\n";
@@ -260,12 +259,13 @@
 				$nid = $dbh->lastInsertId();
 				logEvent("New time program has been inserted. ID $nid", LLINFO_ACTION);
 
-				//reprogram at for net time program and call owSwitchTimerControl in case the time program should get active immediately
+				//reprogram at for new time program and call owSwitchTimerControl
+				//in case the time program should get active immediately
 				logEvent("Programming AT queue after inserting time program", LLINFO_ACTION);
 				$rv1 = reprogramAt($dbh, $nid);
 				owSwitchTimerControl($dbh);
 			}
-		}
+		} //if empty errormsg
 
 		if (empty($errormsg)) {
 			$redirect = TRUE;

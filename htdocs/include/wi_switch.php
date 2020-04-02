@@ -54,7 +54,7 @@
 			}
 			else
 				owSwitchTimerControl($dbh, $opt = array('modechange' => 1));
-		} //if $ra == 1
+		} //if $ra <> 1 else
 
 		if (empty($errormsg)) {
 			$redirect = TRUE;
@@ -64,4 +64,4 @@
 			$smarty->assign('errormsg', $errormsg);
 			$smarty_view = 'messages.tpl';
 		}
-	}
+	} //if subaction == setmode
