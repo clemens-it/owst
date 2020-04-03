@@ -3,4 +3,4 @@
 
 # at reboot empty the at-queue and call tp.php to reprogram all the at-jobs (-r) and to reset the
 # switches (-m) to their required states
-@reboot	pi	[ -x /opt/owst/tp.php ] && atq | cut -f1 | xargs -r atrm && /opt/owst/tp.php -mr
+@reboot	owst	[ -x /opt/owst/tp.php ] && atq | cut -f1 | xargs -r atrm && /opt/owst/tp.php -mr
