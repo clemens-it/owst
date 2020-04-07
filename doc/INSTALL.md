@@ -1,11 +1,18 @@
 # Installation instructions for OWST on Debian based systems
 
+OWST is an Open Source project performing as a programmable timer for 1-Wire(R) switches such as DS2408 (8-Channel Addressable Switch) or DS2413 (Dual Channel Addressable Switch).
+
+It consists of an web interface for programming times when certain switches are to be turned on or off.
+
+
 ## Requirements
+
 Owst requires the following packages. The setup desribed below relies on nginx
 and PHP FPM, feel free to use any other service (e.g. apache, lighttp, fcgiwrap
 with php-cgi, etc.) if you like.
 
-    apt-get install libow-php7 php-cli php-fpm php-sqlite3 smarty3 at
+    apt-get install nginx-light libow-php7 php-cli php-fpm php-sqlite3 smarty3 at \
+	    owserver ow-shell
 
 
 ## Get files from git
@@ -15,6 +22,7 @@ with php-cgi, etc.) if you like.
 
 
 ## Install files
+
 With the following commands owst will be installed in the following places:
 * Web interface: /srv/www/owst
 * Logfile: /var/log/owst/
@@ -65,6 +73,7 @@ With the following commands owst will be installed in the following places:
 
 
 ## Configure nginx
+
 Edit the site file through which you want to access the owst web interface. In
 case of a default installation this would be /etc/nginx/sites-enabled/default.
 Add the following snippet to the server section. Restart nginx afterwards.
@@ -85,6 +94,7 @@ location ~ /owst/.*\.php$ {
 ```
 systemctl restart nginx.service
 ```
+
 
 # Using sudo instead of a dedicated PHP FPM (obsolete).
 
@@ -111,19 +121,36 @@ following file.
     install -m 0640 -o root -g root  config/etc.sudoers.d.owst /etc/sudoers.d/owst
 
 
-# Testing with a Simulated One Wire Device
+# Testing
 
-Open the file /etc/owfs.conf in an editor and modify the line where the fake
-one wire devices are configured. Add the device address 3A.554433221100.
-Owserver will simulate a DS2413 Dual Channel Addressable Switch with this
-address.
+Determine the address and type (typically DS2413 or DS2408) of your 1-Wire
+switch (e.g. by executing `owdir` on the command line) and insert it manually
+into the SQLite database.
 
-For example:
+    echo "INSERT INTO switch (name, ow_type, ow_address, ow_pio) VALUES ('Test','DS24xx','xx.xxxxxxxxxxxx','PIO.x');" | \
+    sqlite3 /var/lib/owst/owst.sq3
+
+Access the web interface with your browser:
+http://<your.server.ip.address>/owst. You should see the 1-Wire Switch Timer
+Control listing the Test switch you previously inserted into the database.
+
+By clicking on the listed switch you can add, edit and delete time programs.
+
+
+## Testing with a Simulated 1-Wire Device
+
+If you don't have a DS2413 or DS2408 at hand you can test the setup with a
+simulated 1-Wire device. To do this, open the file /etc/owfs.conf in an editor
+and modify the line where the fake 1-Wire devices are configured. Add the
+device address 3A.554433221100. Owserver will simulate a DS2413 Dual Channel
+Addressable Switch with this address.
+
+For instance:
 
     server: FAKE = DS18S20,3A.554433221100
 
 
-Restart owserver
+After editing the file, restart owserver
 
     systemctl restart owserver.service
 
@@ -135,11 +162,11 @@ Insert fake switch into database
 
 
 Access the web interface with your browser:
-http://<your.server.ip.address>/owst. You should see the One Wire Switch Timer
-Controllisting the Test switch you previously inserted into the database. If
+http://<your.server.ip.address>/owst. You should see the 1-Wire Switch Timer
+Control listing the Test switch you previously inserted into the database. If
 you reload the page multiple times the switch status should change randomly (as
 expected with owserver faking the device).
 
 By clicking on the listed switch you can add, edit and delete time programs.
-Please note that time programs will not have an effect with a simulated one
-wire device.
+Please note that time programs will not have an effect with a simulated 1-Wire
+device.
