@@ -105,14 +105,14 @@ a .divbutton  {
 }
 
 .OOoff, .OOon {
-	width:32px;
-	height:32px;
+	width:35px;
+	height:35px;
 	padding:1px 2px 3px 1px;
 	font-size:12px;
 	background:lightgray;
 	text-align:center;
 }
-.OOoff div, .OOon div {
+.OOoff span, .OOon span {
 	width:18px;
 	height:18px;
 	min-height:18px;
@@ -122,12 +122,14 @@ a .divbutton  {
 	border-bottom:1px solid white;
 	border-left:1px solid gray;
 	margin:0 auto;
+	padding: 3px;
+	display: inline-block;
 }
-.OOon div {
+.OOon span {
 	background:green;
 	color:lightgreen;
 }
-.OOoff div {
+.OOoff span {
 	background:lightgray;
 	color:gray;
 }

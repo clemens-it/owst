@@ -57,8 +57,8 @@ New Time Program
 			&nbsp;-&nbsp;
 		</div>
 		<div>
-			<input type="text" id="valid_until" name="tp[valid_until]" value="{$data.valid_until}" maxlength="10"
-				size="10" {if $data.forever_valid_until}readonly="readonly"{/if}>
+			<input type="text" id="valid_until" name="tp[valid_until]" value="{$data.valid_until}" maxlength="10" size="10"
+				{if $data.forever_valid_until} readonly="readonly"{/if}>
 			<button type="button" id="bvalid_until">...</button><br>
 			<input type="checkbox" name="tp[forever_valid_until]" id="forever_valid_until"
 				{if $data.forever_valid_until} checked="checked"{/if} onclick="date_no_limit(this,'valid_until');">
@@ -68,19 +68,19 @@ New Time Program
 		<hr style="clear:both">
 		Days:<br>
 		<button type="button" name="1" class="{if $data.d1}OOon{else}OOoff{/if}" onclick="onoff(this);" value="{$data.d1}">
-			Mo</button>&nbsp;
+			<span>Mo</span></button>&nbsp;
 		<button type="button" name="2" class="{if $data.d2}OOon{else}OOoff{/if}" onclick="onoff(this);" value="{$data.d2}">
-			<div>Tu</div></button>&nbsp;
+			<span>Tu</span></button>&nbsp;
 		<button type="button" name="3" class="{if $data.d3}OOon{else}OOoff{/if}" onclick="onoff(this);" value="{$data.d3}">
-			<div>We</div></button>&nbsp;
+			<span>We</span></button>&nbsp;
 		<button type="button" name="4" class="{if $data.d4}OOon{else}OOoff{/if}" onclick="onoff(this);" value="{$data.d4}">
-			<div>Th</div></button>&nbsp;
+			<span>Th</span></button>&nbsp;
 		<button type="button" name="5" class="{if $data.d5}OOon{else}OOoff{/if}" onclick="onoff(this);" value="{$data.d5}">
-			<div>Fr</div></button>&nbsp;
+			<span>Fr</span></button>&nbsp;
 		<button type="button" name="6" class="{if $data.d6}OOon{else}OOoff{/if}" onclick="onoff(this);" value="{$data.d6}">
-			<div>Sa</div></button>&nbsp;
+			<span>Sa</span></button>&nbsp;
 		<button type="button" name="0" class="{if $data.d0}OOon{else}OOoff{/if}" onclick="onoff(this);" value="{$data.d0}">
-			<div>Su</div></button>
+			<span>Su</span></button>
 		{* since buttons' values are not submitted, javascript code updates the following hidden fields *}
 		<input type="hidden" name="tp[d0]" id="day0" value="{$data.d0}">
 		<input type="hidden" name="tp[d1]" id="day1" value="{$data.d1}">
@@ -138,7 +138,7 @@ New Time Program
 	</div>
 {/strip}
 {literal}
-<script type="text/javascript">//<![CDATA[
+<script>//<![CDATA[
 	Calendar.setup({
 		inputField : "valid_from",
 		trigger    : "bvalid_from",
