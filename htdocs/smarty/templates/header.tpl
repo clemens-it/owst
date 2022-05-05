@@ -2,7 +2,7 @@
 {strip}
 <html lang="en">
 <head>
-	<meta charset="ISO-8859-1">
+	<meta charset="utf-8">
 	<title>OW Switch Timer Control</title>
 	<link rel="stylesheet" type="text/css" href="style/layout.css">
 	<script src="script/script.js"></script>
