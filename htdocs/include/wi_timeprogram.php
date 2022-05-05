@@ -197,11 +197,23 @@
 		@$sid = intval($_GET['sid']);
 		($sid > 0) or die("Switch ID is $sid");
 
+		//define empty dataset for smarty template
+		$empty_data = [
+			'switch_id'=>$sid,
+			'name'=>'', 'switch_on_time'=>'', 'switch_off_time'=>'',
+			'd0'=>'', 'd1'=>'', 'd2'=>'', 'd3'=>'', 'd4'=>'', 'd5'=>'', 'd6'=>'',
+			'valid_from'=>'', 'valid_until'=>'',
+			'forever_valid_from'=>0, 'forever_valid_until'=>0,
+			'delete_after_becoming_invalid'=>0,
+			'override_other_programs_when_turning_off'=>0,
+			'switch_off_priority'=>'runtime',
+		];
 		$smarty->assign('sid', $sid);
 		$smarty->assign('form_mode', 'insert');
 		$smarty->assign('so_priorities', array('runtime'=>'Runtime', 'time'=>'Switch off time'));
 		$smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
 		$smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
+		$smarty->assign('data', $empty_data);
 		$smarty_view = 'timeprogram_edit.tpl';
 	} // subaction == addnew
 

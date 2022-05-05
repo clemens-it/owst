@@ -10,14 +10,12 @@ New Time Program
 	{*<div style="height:162px;"><br><br><br>.</div> {* must have same height as buttonbar *}
 	<div class="buttonbar">
 		<input type="hidden" name="action" value="timeprogram">
+		<input type="hidden" name="tp[switch_id]" value="{$data.switch_id}">
 		{if $form_mode == "edit"}
 			<input type="hidden" name="subaction" value="update">
 			<input type="hidden" name="tp[id]" value="{$data.id}">
-			<input type="hidden" name="tp[switch_id]" value="{$data.switch_id}">
 		{else}
 			<input type="hidden" name="subaction" value="insert">
-			{* on insert there's no array data defined, sid is in a separate variable *}
-			<input type="hidden" name="tp[switch_id]" value="{$sid}">
 		{/if}
 		<input type="submit" name="submit" value="{if $form_mode == "edit"}Save changes{else}Insert{/if}" style="width:8em;">
 		<a href="{$scriptname}?action=timeprogram&subaction=list&sid={$sid}">
@@ -121,6 +119,7 @@ New Time Program
 <input type="hidden" id="cfg_forever_valid_from" value="{$cfg_forever_valid_from}">
 <input type="hidden" id="cfg_forever_valid_until" value="{$cfg_forever_valid_until}">
 
+{if $form_mode == "edit"}
 	<div id="intrdiv" class="buttonbar" style="display:none; margin-top:5px; padding-bottom:9px;">
 		<form action="{$scriptname}">
 			Interrupt time program:<br>
@@ -136,6 +135,7 @@ New Time Program
 			<input type="hidden" name="subaction" value="interrupt">
 		</form>
 	</div>
+{/if}
 {/strip}
 {literal}
 <script>//<![CDATA[
