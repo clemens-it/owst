@@ -28,7 +28,7 @@ New Time Program
 				<div class="divbutton" style="width:7em; float:left; margin:0px;">Delete</div></a>
 			<a href="{$scriptname}?action=timeprogram&subaction=clone&tpid={$data.tpid}">
 				<div class="divbutton" style="width:7em; float:left; margin:0px 5px;">Clone</div></a>
-			<a href="#intr" onclick="toggleDisplay('intrdiv');">
+			<a href="#intrdiv" onclick="toggleDisplay('intrdiv');">
 				<div class="divbutton" style="width:7em; float:right; margin:0px;">Interrupt</div></a>
 			<br style="clear:both;">
 		{/if}
@@ -122,7 +122,6 @@ New Time Program
 <input type="hidden" id="cfg_forever_valid_until" value="{$cfg_forever_valid_until}">
 
 	<div id="intrdiv" class="buttonbar" style="display:none; margin-top:5px; padding-bottom:9px;">
-		<a name="intr"></a>
 		<form action="{$scriptname}">
 			Interrupt time program:<br>
 			&nbsp; execute until - and restart on:<br>
