@@ -3,7 +3,7 @@
 	One Wire Switch Timer Control
 </div>
 <div>
-	{* <div style="height:81px;"></div> {* must have same height as buttonbar *}
+	{* <div style="height:81px;"></div> *} {* must have same height as buttonbar *}
 	<div class="buttonbar" style="width:352px;">
 		<a href="{$scriptname}?action=timeprogram&subaction=addnew&sid={$sid}">
 			<div class="divbutton" style="width:7em; float:left; margin:0px;">Add new</div></a>
@@ -92,5 +92,5 @@
 			{/foreach}{* $data as $v *}
 		{/if}{* $tp_count == 0 *}
 	</div>
-
+</div>
 {/strip}
