@@ -6,6 +6,7 @@ define('LLINFO_OWACTION', 2);
 define('LLINFO_ACTION', 3);
 define('LLINFO', 4);
 define('LLDEBUG', 5);
+
 $log_levels = array(LLERROR => 'Error', LLWARN => 'Warn', LLINFO_OWACTION => 'OW Action Info', LLINFO_ACTION => 'Action Info',
 	LLINFO => 'All Info', LLDEBUG => 'Debug');
 
