@@ -56,11 +56,7 @@ With the following commands owst will be installed in the following places:
     install -m 0644 -o root -g root config/etc.cron.d.owst /etc/cron.d/owst
     install -m 0644 -o root -g root config/etc.logrotate.d.owst /etc/logrotate.d/owst
     install -m 0644 -o root -g root config/etc.php.x.mods-available.owphp.ini /etc/php/7.4/mods-available/owphp.ini
-    install -m 0644 -o root -g root config/etc.php.x.fpm.pool.d.owst.conf /etc/php/7.4/fpm/pool.d/owst
-
-    # Enable php module owphp, restart PHP FPM service
-    phpenmod owphp
-    systemctl restart php7.4-fpm.service
+    install -m 0644 -o root -g root config/etc.php.x.fpm.pool.d.owst.conf /etc/php/7.4/fpm/pool.d/owst.conf
 
 
 ### Create and set permissions for web service directory, copy file for web interface.
@@ -70,6 +66,12 @@ With the following commands owst will be installed in the following places:
     chmod o+x /srv/www/
     cp -r htdocs/* /srv/www/owst/
     chown -R owst.www-data /srv/www/owst/
+
+
+### Enable php module owphp, restart PHP FPM service.
+
+    phpenmod owphp
+    systemctl restart php7.4-fpm.service
 
 
 ## Configure nginx
