@@ -12,7 +12,7 @@ and PHP FPM, feel free to use any other service (e.g. apache, lighttp, fcgiwrap
 with php-cgi, etc.) if you like.
 
     apt-get install nginx-light libow-php7 php-cli php-fpm php-sqlite3 smarty3 at \
-       owserver ow-shell
+       owserver ow-shell sqlite3
 
 
 ## Get files from git
