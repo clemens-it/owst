@@ -7,9 +7,13 @@ if ($_REQUEST['subaction'] == 'list') {
 	($sid > 0) or die("Switch ID is $sid");
 	$errormsg = '';
 
-	$sql = "SELECT tp.id AS tpid, s.name AS sname, s.mode, s.ow_address, s.ow_pio, tp.* "
-		."FROM switch s LEFT OUTER JOIN time_program tp ON tp.switch_id = s.id "
-		."WHERE s.id = $sid";
+	$sql = "
+		SELECT tp.id AS tpid, s.name AS sname, s.mode, s.ow_address, s.ow_pio, tp.*
+		FROM switch s
+			LEFT OUTER JOIN time_program tp ON tp.switch_id = s.id
+		WHERE s.id = $sid
+		ORDER BY tp.name
+	";
 
 	$sth = $dbh->query($sql);
 	($sth === FALSE) and
