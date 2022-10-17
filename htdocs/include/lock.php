@@ -1,16 +1,18 @@
 <?php
 
-$lock_fh = FALSE;
+$lock_fh = false;
 
-function lockEx() {
+function lockEx()
+{
 	global $lock_fh, $cfg;
 	$lock_fh = fopen($cfg['lock_file'], 'w+') or die("can not create or open lock file {$cfg['lock_file']}\n");
 	flock($lock_fh, LOCK_EX) or die("can not lock lock file\n");
 }
 
-function unLockEx() {
+function unLockEx()
+{
 	global $lock_fh;
-	if ($lock_fh !== FALSE) {
+	if ($lock_fh !== false) {
 		flock($lock_fh, LOCK_UN);
 		fclose($lock_fh);
 	}

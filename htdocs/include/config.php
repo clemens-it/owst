@@ -131,20 +131,21 @@ $cfg['dd']['time_program'] = array(
 		'regex' => '^\d+$',
 		'format' => 'Must be an integer',
 	),
-	/* not enlisted:
+	/* not listed:
 		id, active, time_switched_on
 	*/
 );
 
 
-function wrapCheckDate($datestr) {
+function wrapCheckDate($datestr)
+{
 	//wrapper for checkdate - splits a date into year, month, day from a string and
 	//feeds it to checkdate
 	unset($match);
 	if (preg_match('/^(1999|2\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/', $datestr, $match)) {
 		//checkdate(month, day, year)
 		return checkdate($match[2], $match[3], $match[1]);
+	} else {
+		return false;
 	}
-	else
-		return FALSE;
 } //wrapCheckDate

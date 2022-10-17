@@ -2,18 +2,19 @@
 
 if ($_REQUEST['subaction'] == 'show') {
 	$filter_loglevel = LLINFO;
-	if (isset($_REQUEST['filter_loglevel']))
+	if (isset($_REQUEST['filter_loglevel'])) {
 		$filter_loglevel = intval($_REQUEST['filter_loglevel']);
+	}
 	//override if invalid value
-	if ($filter_loglevel < LLERROR || $filter_loglevel > LLDEBUG)
+	if ($filter_loglevel < LLERROR || $filter_loglevel > LLDEBUG) {
 		$filter_loglevel = LLINFO;
+	}
 
 	if (!$cfg['use_syslog']) {
 		$fh = fopen($cfg['log_file'], 'r');
-		if ($fh === FALSE)
+		if ($fh === FALSE) {
 			$smarty->assign('errormsg', "Can't open log file");
-		else {
-
+		} else {
 			flock($fh, LOCK_SH);
 			$fs = filesize($cfg['log_file']);
 			if ($fs > $cfg['showlog_maxsize']) {
@@ -33,7 +34,7 @@ if ($_REQUEST['subaction'] == 'show') {
 					unset($log[$k]);
 			}
 
-		$smarty->assign('logdata', $log);
+			$smarty->assign('logdata', $log);
 		}
 
 		//loglevels defined in include/log.php

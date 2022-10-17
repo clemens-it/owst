@@ -16,8 +16,12 @@ if ($_REQUEST['subaction'] == 'list') {
 	";
 
 	$sth = $dbh->query($sql);
-	($sth === FALSE) and
-		die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
+	if ($sth === false) {
+		die(
+			'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+				. implode('; ', $dbh->errorInfo())
+		);
+	}
 
 	//one wire: init
 	if (!init($cfg['ow_adapter'])) {
@@ -29,10 +33,12 @@ if ($_REQUEST['subaction'] == 'list') {
 	$sw_status = -999;
 	$tp_count = 0;
 	while ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
-		if ($sw_status == -999)
+		if ($sw_status == -999) {
 			$sw_status = get("/{$result['ow_address']}/{$result['ow_pio']}");
-		if ($result['tpid'] != "")
+		}
+		if ($result['tpid'] != "") {
 			$tp_count++;
+		}
 		$result['forever_valid_from'] = ($result['valid_from'] == $cfg['forever_valid_from']);
 		$result['forever_valid_until'] = ($result['valid_until'] == $cfg['forever_valid_until']);
 		$data[] = $result;
@@ -60,16 +66,23 @@ if ($_REQUEST['subaction'] == 'edit') {
 		."WHERE tp.id = $tpid";
 
 	$sth = $dbh->query($sql);
-	($sth === FALSE) and
-		die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
+	if ($sth === false) {
+		die(
+			'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+				. implode('; ', $dbh->errorInfo())
+		);
+	}
 
 	$data = array();
 	//there's only one record
 	if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
 		$result['forever_valid_from'] = ($result['valid_from'] == $cfg['forever_valid_from']);
 		$result['forever_valid_until'] = ($result['valid_until'] == $cfg['forever_valid_until']);
-		$result['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' :
-			date('Y-m-d H:i:s', $result['time_switched_on']));
+		$result['time_switched_on_f'] = (
+			$result['time_switched_on'] == 0
+			? 'never'
+			: date('Y-m-d H:i:s', $result['time_switched_on'])
+		);
 		$runtimed = intval( (time()-$result['time_switched_on']) / 86400);
 		$result['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
 		$data = $result;
@@ -81,10 +94,9 @@ if ($_REQUEST['subaction'] == 'edit') {
 		$smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
 		$smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
 		$smarty_view = 'timeprogram_edit.tpl';
-	}
-	else
+	} else {
 		die("no data");
-
+	}
 } // subaction == edit
 
 
@@ -108,20 +120,22 @@ if ($_REQUEST['subaction'] == 'update') {
 	unset($columns['switch_id']);
 
 	$errormsg = '';
-	$rv1 = $rv2 = TRUE;
+	$rv1 = $rv2 = true;
 
 	//check data integrity
 	foreach ($columns as $k => $v) {
 		if (isset($data[$k])) {
 			$data[$k] = trim($data[$k]);
-			if (!isset($v['name']))
+			if (!isset($v['name'])) {
 				$v['name'] = str_replace('_', ' ', $k);
+			}
 			if (isset($v['regex']) && !preg_match('/'.$v['regex'].'/', $data[$k])) {
 				$errormsg .= "'{$v['name']}' does not meet format or requirements: {$v['format']}\n";
 				continue;
 			}
-			if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k]))
+			if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k])) {
 				$errormsg .= "'{$v['name']}' did not pass validity check\n";
+			}
 		}
 	} //foreach
 
@@ -135,13 +149,18 @@ if ($_REQUEST['subaction'] == 'update') {
 		$sql .= " WHERE id = {$tpid}";
 
 		$ra = $dbh->exec($sql);
-		($ra === FALSE) and
-			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
+		if ($ra === false) {
+			die(
+				'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+					. implode('; ', $dbh->errorInfo())
+			);
+		}
 
-		if ($ra == 1)
+		if ($ra == 1) {
 			logEvent("Time program ID $tpid has been updated", LLINFO_ACTION);
-		else
+		} else {
 			$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";
+		}
 
 		if (empty($errormsg)) {
 			//TODO: possible optimization: depending on the changed properties it may (or not) be required
@@ -152,27 +171,34 @@ if ($_REQUEST['subaction'] == 'update') {
 		}
 	} //if errormsg empty -> UPDATE
 
-	if (!$rv1 || !$rv2)
+	if (!$rv1 || !$rv2) {
 		$errormsg .= "Problem occurred during AT-reprogramming. Please check the log\n";
+	}
 
 	//if no error, after saving, redirect to edit
 	if (empty($errormsg)) {
-		$redirect = TRUE;
+		$redirect = true;
 		$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
-	}
-	else {
+	} else {
 		//in case of error just show error messages and some additional information from the database
 		$sql = "SELECT tp.id AS tpid, s.id AS sid, s.name AS sname, tp.* "
 			."FROM time_program tp INNER JOIN switch s ON tp.switch_id = s.id "
 			."WHERE tp.id = $tpid";
 		$sth = $dbh->query($sql);
-		($sth === FALSE) and
-			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
+		if ($sth === false) {
+			die(
+				'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+					. implode('; ', $dbh->errorInfo())
+			);
+		}
 		//there's only one record
 		if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
 			//set calculated values - based from 'read-only' columns from the query result
-			$data['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' :
-				date('Y-m-d H:i:s', $result['time_switched_on']));
+			$data['time_switched_on_f'] = (
+				$result['time_switched_on'] == 0
+				? 'never'
+				: date('Y-m-d H:i:s', $result['time_switched_on'])
+			);
 			$runtimed = intval( (time()-$result['time_switched_on']) / 86400);
 			$data['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
 			$data['sname'] = $result['sname'];
@@ -243,19 +269,23 @@ if ($_REQUEST['subaction'] == 'insert') {
 
 	$errormsg = '';
 	//check data integrity
-	if ($daysum == 0)
+	if ($daysum == 0) {
 		$errormsg = "Time program needs to be active for at least one weekday\n";
+	}
 	foreach ($columns as $k => $v) {
 		if (isset($data[$k])) {
 			$data[$k] = trim($data[$k]);
-			if (isset($v['regex']) && !preg_match('/'.$v['regex'].'/', $data[$k])) {
-			if (!isset($v['name']))
+			if (!isset($v['name'])) {
 				$v['name'] = str_replace('_', ' ', $k);
+			}
+			if (isset($v['regex']) && !preg_match('/'.$v['regex'].'/', $data[$k])) {
 				$errormsg .= "'{$v['name']}' does not meet format or requirements: {$v['format']}\n";
 				continue;
 			}
-			if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k]))
-				$errormsg .= "'{$v['name']}' did not pass validity check\n";			}
+			if (isset($v['checkfunction']) && !$v['checkfunction']($data[$k])) {
+				$errormsg .= "'{$v['name']}' did not pass validity check\n";
+			}
+		}
 	} //foreach
 
 	//compile SQL statement
@@ -268,11 +298,15 @@ if ($_REQUEST['subaction'] == 'insert') {
 		$sql .= ")";
 
 		$ra = $dbh->exec($sql);
-		($ra === FALSE) and
-			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
-		if ($ra <> 1)
+		if ($ra === false) {
+			die(
+				'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+					. implode('; ', $dbh->errorInfo())
+			);
+		}
+		if ($ra <> 1) {
 			$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";
-		else {
+		} else {
 			$nid = $dbh->lastInsertId();
 			logEvent("New time program has been inserted. ID $nid", LLINFO_ACTION);
 
@@ -285,10 +319,9 @@ if ($_REQUEST['subaction'] == 'insert') {
 	} //if empty errormsg
 
 	if (empty($errormsg)) {
-		$redirect = TRUE;
+		$redirect = true;
 		$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
-	}
-	else {
+	} else {
 		$smarty->assign('errormsg', $errormsg);
 		$smarty->assign('sid', $sid);
 		$smarty->assign('form_mode', 'insert');
@@ -313,11 +346,15 @@ if ($_REQUEST['subaction'] == 'delete') {
 	$errormsg = $msg = '';
 	$sql = "DELETE FROM time_program WHERE id = " .$dbh->quote($tpid);
 	$ra = $dbh->exec($sql);
-	($ra === FALSE) and
-		die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
-	if ($ra <> 1)
+	if ($ra === false) {
+		die(
+			'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+				. implode('; ', $dbh->errorInfo())
+		);
+	}
+	if ($ra <> 1) {
 		$errormsg .= "Delete: Rows affected by query does not equal to 1, but is $ra\n";
-	else {
+	} else {
 		logEvent("Time program ID $tpid has been deleted", LLINFO_ACTION);
 		//emptying and repogramming of the at queue isn't really necessary
 		//at jobs of deleted time program will execute the script and nothing
@@ -325,10 +362,9 @@ if ($_REQUEST['subaction'] == 'delete') {
 	}
 
 	if (empty($errormsg)) {
-		$redirect = TRUE;
+		$redirect = true;
 		$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
-	}
-	else {
+	} else {
 		$smarty->assign('msg', $msg);
 		$smarty->assign('errormsg', $errormsg);
 		$smarty_view = 'messages.tpl';
@@ -346,8 +382,12 @@ if ($_REQUEST['subaction'] == 'clone') {
 		."WHERE tp.id = $tpid";
 
 	$sth = $dbh->query($sql);
-	($sth === FALSE) and
-		die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
+	if ($sth === false) {
+		die(
+			'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+				. implode('; ', $dbh->errorInfo())
+		);
+	}
 
 	$data = array();
 	//there's only one record
@@ -368,9 +408,9 @@ if ($_REQUEST['subaction'] == 'clone') {
 		$smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
 		$smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
 		$smarty_view = 'timeprogram_edit.tpl';
-	}
-	else
+	} else {
 		die("no data");
+	}
 } // subcation == clone
 
 
@@ -399,13 +439,20 @@ if ($_REQUEST['subaction'] == 'interrupt') {
 		$sql = "INSERT INTO time_program (". implode(', ', array_keys($columns)) .", valid_from, active, time_switched_on) ".
 				"SELECT ". implode(', ', array_keys($columns)) .", {$intr_until}, 0, 0 FROM time_program WHERE id = {$tpid}";
 		$ra = $dbh->exec($sql);
-		($ra === FALSE) and
-			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
-		if ($ra <> 1)
+		if ($ra === false) {
+			die(
+				'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+					. implode('; ', $dbh->errorInfo())
+			);
+		}
+		if ($ra <> 1) {
 			$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";
-		else {
+		} else {
 			$nid = $dbh->lastInsertId();
-			logEvent("Interrupt from {$intr_from} until {$intr_until}: New time program has been inserted. ID $nid", LLINFO_ACTION);
+			logEvent(
+				"Interrupt from {$intr_from} until {$intr_until}: New time program has been inserted. ID $nid",
+				LLINFO_ACTION
+			);
 			//reprogram at for net time program and call owSwitchTimerControl in the unlikely case
 			//the time program should get active immediately
 			logEvent("Programming AT queue after inserting time program", LLINFO_ACTION);
@@ -416,19 +463,26 @@ if ($_REQUEST['subaction'] == 'interrupt') {
 	if (empty($errormsg)) {
 		$sql = "UPDATE time_program SET valid_until = {$intr_from}, delete_after_becoming_invalid = 1 WHERE id = {$tpid}";
 		$ra = $dbh->exec($sql);
-		($ra === FALSE) and
-			die('Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: ' . implode('; ', $dbh->errorInfo()));
-		if ($ra <> 1)
+		if ($ra === false) {
+			die(
+				'Query failed in '.__FILE__.' before line '.__LINE__.'! Error description: '
+					. implode('; ', $dbh->errorInfo())
+			);
+		}
+		if ($ra <> 1) {
 			$errormsg .= "Rows affected by query does not equal to 1, but is $ra\n";
-		else
-			logEvent("Interrupt from {$intr_from} until {$intr_until}: Existing time program has been updated", LLINFO_ACTION);
+		} else {
+			logEvent(
+				"Interrupt from {$intr_from} until {$intr_until}: Existing time program has been updated",
+				LLINFO_ACTION
+			);
+		}
 		//can not think of a case where it should be necessary to reprogram AT jobs
 	}
 	if (empty($errormsg)) {
-		$redirect = TRUE;
+		$redirect = true;
 		$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
-	}
-	else {
+	} else {
 		$smarty->assign('errormsg', $errormsg);
 		$smarty_view = 'messages.tpl';
 	}
@@ -452,9 +506,10 @@ if ($_REQUEST['subaction'] == 'immediate') {
 	$format_hhmm = preg_match('/^([01]?\d|2[0-3])?:([0-5]?\d)?$/', $immtime);
 	$format_hdec = preg_match('/^([01]?\d|2[0-3])?([,.]\d{1,2})?$/', $immtime);
 
-	if (!$format_hhmm && !$format_hdec)
-		$errormsg .= "Time for immediate action must be in the format hh:mm or ".
-			"a decimal number (in hours) and in any case less than 24hours\n";
+	if (!$format_hhmm && !$format_hdec) {
+		$errormsg .= "Time for immediate action must be in the format hh:mm or "
+			. "a decimal number (in hours) and in any case less than 24hours\n";
+	}
 
 	preg_match('/^switch_(off_in|on_for)$/', $immaction) or
 		$errormsg .= "Immediate action must be either 'switch_off_in' or 'switch_on_for'\n";
@@ -490,10 +545,9 @@ if ($_REQUEST['subaction'] == 'immediate') {
 	} //if empty errormsg
 
 	if ($errormsg == '') {
-		$redirect = TRUE;
+		$redirect = true;
 		$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
-	}
-	else {
+	} else {
 		$smarty->assign('errormsg', $errormsg);
 		$smarty_view = 'messages.tpl';
 	}
@@ -522,8 +576,7 @@ if ($_REQUEST['subaction'] == 'immediate_str') {
 			$tm_duration = userTimeTomin($match[7]);
 			$immaction = 'switch_on_for';
 			$name = "Immediate: ON in {$match[2]} for {$match[7]}";
-		}
-		elseif($match[12] == 'off') {
+		} elseif($match[12] == 'off') {
 			$tm_duration = userTimeToMin($match[13]);
 			$immaction = 'switch_off_in';
 			$name = "Immediate: OFF in {$match[13]}";
@@ -564,10 +617,9 @@ if ($_REQUEST['subaction'] == 'immediate_str') {
 	} //if empty errormsg
 
 	if ($errormsg == '') {
-		$redirect = TRUE;
+		$redirect = true;
 		$redirect_param_str = "action=timeprogram&subaction=list&sid=$sid";
-	}
-	else {
+	} else {
 		$smarty->assign('errormsg', $errormsg);
 		$smarty_view = 'messages.tpl';
 	}

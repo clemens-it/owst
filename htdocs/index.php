@@ -49,25 +49,30 @@ if (!isset($_REQUEST['action'])) {
 	$_REQUEST['subaction'] = 'list';
 }
 
-if ($_REQUEST['action'] == 'switch' && isset($_REQUEST['subaction']))
+if ($_REQUEST['action'] == 'switch' && isset($_REQUEST['subaction'])) {
 	require_once 'include/wi_switch.php';
+}
 
-if ($_REQUEST['action'] == 'timeprogram' && isset($_REQUEST['subaction']))
+if ($_REQUEST['action'] == 'timeprogram' && isset($_REQUEST['subaction'])) {
 	require_once 'include/wi_timeprogram.php';
+}
 
-if ($_REQUEST['action'] == 'log' && isset($_REQUEST['subaction']))
+if ($_REQUEST['action'] == 'log' && isset($_REQUEST['subaction'])) {
 	require_once 'include/wi_log.php';
+}
 
-if ($_REQUEST['action'] == 'at' && isset($_REQUEST['subaction']))
+if ($_REQUEST['action'] == 'at' && isset($_REQUEST['subaction'])) {
 	require_once 'include/wi_at.php';
+}
 
 if ($redirect) {
 	header("Location: {$_SERVER['SCRIPT_NAME']}?$redirect_param_str");
-}
-else {
+} else {
 	$smarty->display('header.tpl');
-	foreach(explode(';', $smarty_view) as $v)
-		if (!empty($v))
+	foreach(explode(';', $smarty_view) as $v) {
+		if (!empty($v)) {
 			$smarty->display($v);
+		}
+	}
 	$smarty->display('footer.tpl');
 }

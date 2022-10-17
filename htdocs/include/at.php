@@ -1,6 +1,7 @@
 <?php
 
-function programAt($cmd) {
+function programAt($cmd)
+{
 	// Programs at and checks whether it was successful
 	/*
 	//Typical output from at:
@@ -12,19 +13,20 @@ function programAt($cmd) {
 
 	if (empty($cmd)) {
 		logEvent("programAt: command is empty", LLERROR);
-		return FALSE;
+		return false;
 	}
 	//at writes to stderr, so redirect to stdout
 	$cmd .= ' 2>&1';
 
 	//lloutput ist last line of output
 	$lloutput = exec($cmd, $output, $retval);
-	if ($retval == 0)
+	if ($retval == 0) {
 		logEvent("Execution of $cmd queued with at. At output: ".$lloutput, LLINFO_ACTION);
-	else {
+	} else {
 		//remove warning from output array if present
-		if (isset($output[0]) && $output[0]== 'warning: commands will be executed using /bin/sh')
+		if (isset($output[0]) && $output[0]== 'warning: commands will be executed using /bin/sh') {
 			unset($output[0]);
+		}
 		logEvent("Queing with at failed. Return value: $retval. Output: ".implode("--", $output), LLERROR);
 	}
 	return ($retval == 0);
