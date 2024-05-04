@@ -48,8 +48,8 @@ if ($_REQUEST['subaction'] == 'list') {
     $smarty->assign('data', $data);
     $smarty->assign('tp_count', $tp_count);
     $smarty->assign('sw_status', $sw_status);
-    $smarty->assign('sw_modes', array('on'=>'On', 'off'=>'Off', 'timer'=>'Timer'));
-    $smarty->assign('immediate_opt', array('switch_on_for'=>'Switch on for', 'switch_off_in'=>'Switch off in'));
+    $smarty->assign('sw_modes', array('on' => 'On', 'off' => 'Off', 'timer' => 'Timer'));
+    $smarty->assign('immediate_opt', array('switch_on_for' => 'Switch on for', 'switch_off_in' => 'Switch off in'));
     $smarty->assign('sid', $sid);
     $smarty->assign('errormsg', $errormsg);
     $smarty_view = 'messages.tpl;timeprogram.tpl';
@@ -79,18 +79,18 @@ if ($_REQUEST['subaction'] == 'edit') {
         $result['forever_valid_from'] = ($result['valid_from'] == $cfg['forever_valid_from']);
         $result['forever_valid_until'] = ($result['valid_until'] == $cfg['forever_valid_until']);
         $result['time_switched_on_f'] = (
-        $result['time_switched_on'] == 0
-        ? 'never'
-        : date('Y-m-d H:i:s', $result['time_switched_on'])
+            $result['time_switched_on'] == 0
+            ? 'never'
+            : date('Y-m-d H:i:s', $result['time_switched_on'])
         );
-        $runtimed = intval((time()-$result['time_switched_on']) / 86400);
-        $result['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
+        $runtimed = intval((time() - $result['time_switched_on']) / 86400);
+        $result['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time() - $result['time_switched_on']);
         $data = $result;
 
         $smarty->assign('data', $data);
         $smarty->assign('sid', $data['switch_id']);
         $smarty->assign('form_mode', 'edit');
-        $smarty->assign('so_priorities', array('runtime'=>'Runtime', 'time'=>'Switch off time'));
+        $smarty->assign('so_priorities', array('runtime' => 'Runtime', 'time' => 'Switch off time'));
         $smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
         $smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
         $smarty_view = 'timeprogram_edit.tpl';
@@ -113,8 +113,8 @@ if ($_REQUEST['subaction'] == 'update') {
     ($sid > 0) or die("Switch ID is $sid");
 
     //handle checkboxes
-    @$data['override_other_programs_when_turning_off'] = ($data['override_other_programs_when_turning_off'] == 'on' ?  1 : 0);
-    @$data['delete_after_becoming_invalid'] = ($data['delete_after_becoming_invalid'] == 'on' ?  1 : 0);
+    @$data['override_other_programs_when_turning_off'] = ($data['override_other_programs_when_turning_off'] == 'on' ? 1 : 0);
+    @$data['delete_after_becoming_invalid'] = ($data['delete_after_becoming_invalid'] == 'on' ? 1 : 0);
     $columns = $cfg['dd']['time_program'];
     //we do not need to change the following columns
     unset($columns['switch_id']);
@@ -195,12 +195,12 @@ if ($_REQUEST['subaction'] == 'update') {
         if ($result = $sth->fetch(PDO::FETCH_ASSOC)) {
             //set calculated values - based from 'read-only' columns from the query result
             $data['time_switched_on_f'] = (
-            $result['time_switched_on'] == 0
-            ? 'never'
-            : date('Y-m-d H:i:s', $result['time_switched_on'])
+                $result['time_switched_on'] == 0
+                ? 'never'
+                : date('Y-m-d H:i:s', $result['time_switched_on'])
             );
-            $runtimed = intval((time()-$result['time_switched_on']) / 86400);
-            $data['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
+            $runtimed = intval((time() - $result['time_switched_on']) / 86400);
+            $data['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time() - $result['time_switched_on']);
             $data['sname'] = $result['sname'];
             $data['sid'] = $result['sid'];
             $data['tpid'] = $result['tpid'];
@@ -215,7 +215,7 @@ if ($_REQUEST['subaction'] == 'update') {
         $smarty->assign('data', $data);
         $smarty->assign('sid', $data['switch_id']);
         $smarty->assign('form_mode', 'edit');
-        $smarty->assign('so_priorities', array('runtime'=>'Runtime', 'time'=>'Switch off time'));
+        $smarty->assign('so_priorities', array('runtime' => 'Runtime', 'time' => 'Switch off time'));
         $smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
         $smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
         $smarty_view = 'timeprogram_edit.tpl';
@@ -230,18 +230,18 @@ if ($_REQUEST['subaction'] == 'addnew') {
 
     //define empty dataset for smarty template
     $empty_data = [
-    'switch_id'=>$sid,
-    'name'=>'', 'switch_on_time'=>'', 'switch_off_time'=>'',
-    'd0'=>'', 'd1'=>'', 'd2'=>'', 'd3'=>'', 'd4'=>'', 'd5'=>'', 'd6'=>'',
-    'valid_from'=>'', 'valid_until'=>'',
-    'forever_valid_from'=>0, 'forever_valid_until'=>0,
-    'delete_after_becoming_invalid'=>0,
-    'override_other_programs_when_turning_off'=>0,
-    'switch_off_priority'=>'runtime',
+        'switch_id' => $sid,
+        'name' => '', 'switch_on_time' => '', 'switch_off_time' => '',
+        'd0' => '', 'd1' => '', 'd2' => '', 'd3' => '', 'd4' => '', 'd5' => '', 'd6' => '',
+        'valid_from' => '', 'valid_until' => '',
+        'forever_valid_from' => 0, 'forever_valid_until' => 0,
+        'delete_after_becoming_invalid' => 0,
+        'override_other_programs_when_turning_off' => 0,
+        'switch_off_priority' => 'runtime',
     ];
     $smarty->assign('sid', $sid);
     $smarty->assign('form_mode', 'insert');
-    $smarty->assign('so_priorities', array('runtime'=>'Runtime', 'time'=>'Switch off time'));
+    $smarty->assign('so_priorities', array('runtime' => 'Runtime', 'time' => 'Switch off time'));
     $smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
     $smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
     $smarty->assign('data', $empty_data);
@@ -258,10 +258,10 @@ if ($_REQUEST['subaction'] == 'insert') {
     ($sid > 0) or die("Switch ID is $sid");
 
     //handle checkboxes
-    @$data['override_other_programs_when_turning_off'] = ($data['override_other_programs_when_turning_off'] == 'on' ?  1 : 0);
-    @$data['delete_after_becoming_invalid'] = ($data['delete_after_becoming_invalid'] == 'on' ?  1 : 0);
+    @$data['override_other_programs_when_turning_off'] = ($data['override_other_programs_when_turning_off'] == 'on' ? 1 : 0);
+    @$data['delete_after_becoming_invalid'] = ($data['delete_after_becoming_invalid'] == 'on' ? 1 : 0);
     $daysum = 0;
-    for ($i=0; $i<=6; $i++) {
+    for ($i = 0; $i <= 6; $i++) {
         @$data['d'.$i] = (empty($data['d'.$i]) ? 0 : 1);
         $daysum += $data['d'.$i];
     }
@@ -327,7 +327,7 @@ if ($_REQUEST['subaction'] == 'insert') {
         $smarty->assign('form_mode', 'insert');
 
         $smarty->assign('data', $data);
-        $smarty->assign('so_priorities', array('runtime'=>'Runtime', 'time'=>'Switch off time'));
+        $smarty->assign('so_priorities', array('runtime' => 'Runtime', 'time' => 'Switch off time'));
         $smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
         $smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
         $smarty->error_reporting = E_ALL & ~E_NOTICE;
@@ -396,15 +396,15 @@ if ($_REQUEST['subaction'] == 'clone') {
         $result['forever_valid_until'] = ($result['valid_until'] == $cfg['forever_valid_until']);
         $result['time_switched_on_f'] = ($result['time_switched_on'] == 0 ? 'never' :
         date('Y-m-d H:i:s', $result['time_switched_on']));
-        $runtimed = intval((time()-$result['time_switched_on']) / 86400);
-        $result['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time()-$result['time_switched_on']);
+        $runtimed = intval((time() - $result['time_switched_on']) / 86400);
+        $result['runtime'] = ($runtimed > 0 ? $runtimed .' days ' : ''). gmdate('H:i:s', time() - $result['time_switched_on']);
         unset($result['tpid']);
         $data = $result;
 
         $smarty->assign('data', $data);
         $smarty->assign('sid', $data['switch_id']);
         $smarty->assign('form_mode', 'insert');
-        $smarty->assign('so_priorities', array('runtime'=>'Runtime', 'time'=>'Switch off time'));
+        $smarty->assign('so_priorities', array('runtime' => 'Runtime', 'time' => 'Switch off time'));
         $smarty->assign('cfg_forever_valid_from', $cfg['forever_valid_from']);
         $smarty->assign('cfg_forever_valid_until', $cfg['forever_valid_until']);
         $smarty_view = 'timeprogram_edit.tpl';
@@ -520,26 +520,26 @@ if ($_REQUEST['subaction'] == 'immediate') {
 
         $t = time();
         $wd = date('w', $t);
-        $ontime = date('G', $t)*60 + date('i', $t);
+        $ontime = date('G', $t) * 60 + date('i', $t);
         $offtime = ($ontime + $immmin) % 1440;
 
         //calculations are done, format ontime and offtime for database
         $ontime = date('H:i', $t);
-        $offtime = sprintf('%02d:%02d', floor($offtime/60), $offtime%60);
-        $data = array(
-        'switch_id'         => $sid,
-        'name'              => 'Immediate: '. ($immaction == 'switch_off_in' ? 'OFF in' : 'ON for'). " {$immtime}",
-        'switch_on_time'    => $ontime,
-        'switch_off_time'   => $offtime,
-        'valid_from'        => date('Y-m-d', $t),
-        'valid_until'       => date('Y-m-d', $t),
-        "d{$wd}"            => 1,                //default value for dx is 0, so just set the one we need
-        'active'            => ($immaction == 'switch_off_in' ? 1 : 0),
-        'time_switched_on'  => $t,               //time_switched_on is not considered when switching on
-        'switch_off_priority'                      => 'runtime',
-        'delete_after_becoming_invalid'            => 1,
-        'override_other_programs_when_turning_off' => ($immaction == 'switch_off_in' ? 1 : 0),
-        );
+        $offtime = sprintf('%02d:%02d', floor($offtime / 60), $offtime % 60);
+        $data = [
+            'switch_id'         => $sid,
+            'name'              => 'Immediate: '. ($immaction == 'switch_off_in' ? 'OFF in' : 'ON for'). " {$immtime}",
+            'switch_on_time'    => $ontime,
+            'switch_off_time'   => $offtime,
+            'valid_from'        => date('Y-m-d', $t),
+            'valid_until'       => date('Y-m-d', $t),
+            "d{$wd}"            => 1,                //default value for dx is 0, so just set the one we need
+            'active'            => ($immaction == 'switch_off_in' ? 1 : 0),
+            'time_switched_on'  => $t,               //time_switched_on is not considered when switching on
+            'switch_off_priority'                      => 'runtime',
+            'delete_after_becoming_invalid'            => 1,
+            'override_other_programs_when_turning_off' => ($immaction == 'switch_off_in' ? 1 : 0),
+        ];
 
         immediateInsertAndActivate($dbh, $data, $immaction);
     } //if empty errormsg
@@ -573,19 +573,19 @@ if ($_REQUEST['subaction'] == 'immediate_str') {
     );
 
     if ($errormsg == '') {
-        if($match[1] == 'on') {
+        if ($match[1] == 'on') {
             $tm_start = userTimeToMin($match[2]);
             $tm_duration = userTimeTomin($match[7]);
             $immaction = 'switch_on_for';
             $name = "Immediate: ON in {$match[2]} for {$match[7]}";
-        } elseif($match[12] == 'off') {
+        } elseif ($match[12] == 'off') {
             $tm_duration = userTimeToMin($match[13]);
             $immaction = 'switch_off_in';
             $name = "Immediate: OFF in {$match[13]}";
         }
 
         $tday = $t = time();
-        $ontime = date('G', $t)*60 + date('i', $t);
+        $ontime = date('G', $t) * 60 + date('i', $t);
         if ($immaction == 'switch_on_for') {
             $ontime = $ontime + $tm_start;
             //check if carry over to next day is required
@@ -598,8 +598,8 @@ if ($_REQUEST['subaction'] == 'immediate_str') {
         $offtime = ($ontime + $tm_duration) % 1440;
 
         //calculations are done, format ontime and offtime for database
-        $ontime  = sprintf('%02d:%02d', floor($ontime/60),  $ontime%60);
-        $offtime = sprintf('%02d:%02d', floor($offtime/60), $offtime%60);
+        $ontime  = sprintf('%02d:%02d', floor($ontime / 60), $ontime % 60);
+        $offtime = sprintf('%02d:%02d', floor($offtime / 60), $offtime % 60);
         $data = array(
         'switch_id'         => $sid,
         'name'              => $name,

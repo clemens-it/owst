@@ -24,7 +24,7 @@ function programAt($cmd)
         logEvent("Execution of $cmd queued with at. At output: ".$lloutput, LLINFO_ACTION);
     } else {
         //remove warning from output array if present
-        if (isset($output[0]) && $output[0]== 'warning: commands will be executed using /bin/sh') {
+        if (isset($output[0]) && $output[0] == 'warning: commands will be executed using /bin/sh') {
             unset($output[0]);
         }
         logEvent("Queing with at failed. Return value: $retval. Output: ".implode("--", $output), LLERROR);

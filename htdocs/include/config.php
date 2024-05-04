@@ -57,7 +57,7 @@ $cfg['atempty_cmd_line'] = "(atq | cut -f1 | xargs --no-run-if-empty atrm) 2>&1"
 $cfg['use_syslog'] = ($cfg['log_file'] != '' && strstr($cfg['log_file'], '/') === false);
 
 //maximum of bytes to load from logfile
-$cfg['showlog_maxsize'] = 500*1024;
+$cfg['showlog_maxsize'] = 500 * 1024;
 
 //data definition for time program
 $cfg['dd']['time_program'] = array(
@@ -89,37 +89,37 @@ $cfg['dd']['time_program'] = array(
         'format' => "Must be either 'time' or 'runtime'",
     ),
     'd0' => array(
-        'name'=>'day0',
+        'name' => 'day0',
         'regex' => '^[01]$',
         'format' => "Must be either 0 or 1, i.e. Off or On",
     ),
     'd1' => array(
-        'name'=>'day1',
+        'name' => 'day1',
         'regex' => '^[01]$',
         'format' => "Must be either 0 or 1, i.e. Off or On",
     ),
     'd2' => array(
-        'name'=>'day2',
+        'name' => 'day2',
         'regex' => '^[01]$',
         'format' => "Must be either 0 or 1, i.e. Off or On",
     ),
     'd3' => array(
-        'name'=>'day3',
+        'name' => 'day3',
         'regex' => '^[01]$',
         'format' => "Must be either 0 or 1, i.e. Off or On",
     ),
     'd4' => array(
-        'name'=>'day4',
+        'name' => 'day4',
         'regex' => '^[01]$',
         'format' => "Must be either 0 or 1, i.e. Off or On",
     ),
     'd5' => array(
-        'name'=>'day5',
+        'name' => 'day5',
         'regex' => '^[01]$',
         'format' => "Must be either 0 or 1, i.e. Off or On",
     ),
     'd6' => array(
-        'name'=>'day6',
+        'name' => 'day6',
         'regex' => '^[01]$',
         'format' => "Must be either 0 or 1, i.e. Off or On",
     ),

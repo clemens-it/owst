@@ -10,9 +10,9 @@ function userTimeToMin($tm_str)
 
     //if there is no colon, time format is decimal in hours
     if ($colpos === false) {
-        $min = (float)str_replace(',', '.', $tm_str)*60;
+        $min = (float)str_replace(',', '.', $tm_str) * 60;
     } else {
-        $min = (int)substr($tm_str, 0, $colpos)*60 + (int)substr($tm_str, $colpos+1, 2);
+        $min = (int)substr($tm_str, 0, $colpos) * 60 + (int)substr($tm_str, $colpos + 1, 2);
     }
 
     return $min;

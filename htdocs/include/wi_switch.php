@@ -27,7 +27,6 @@ if ($_REQUEST['subaction'] == 'list') {
     $smarty->assign('data', $data);
     $smarty->assign('errormsg', $errormsg);
     $smarty_view = 'messages.tpl;switch.tpl';
-
 } //subaction == list
 
 
@@ -37,7 +36,7 @@ if ($_REQUEST['subaction'] == 'setmode') {
     ($sid > 0) or die("Switch ID is $sid");
     $errormsg = '';
 
-    $allowed_modes = array('on'=>'On', 'off'=>'Off', 'timer'=>'Timer');
+    $allowed_modes = array('on' => 'On', 'off' => 'Off', 'timer' => 'Timer');
     if (isset($_GET['switch_mode']) && isset($allowed_modes[$_GET['switch_mode']])) {
         $switch_mode = $_GET['switch_mode'];
     } else {

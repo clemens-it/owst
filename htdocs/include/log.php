@@ -26,7 +26,7 @@ if ($cfg['use_syslog']) {
 }
 
 
-function logEvent($msg, $msg_log_level=LLWARN)
+function logEvent($msg, $msg_log_level = LLWARN)
 {
     global $cfg, $log_fh, $log_level;
     //check if logging is turned on at all

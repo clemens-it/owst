@@ -35,11 +35,9 @@ $redirect_param_str = '';
 $smarty_view = '';
 try {
     $dbh = new PDO($cfg['dsn'], $cfg['dbuser'], $cfg['dbpass']);
-}
-catch (PDOException $e) {
+} catch (PDOException $e) {
     die('Connection to database failed: ' . $e->getMessage());
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     die("Error: {$e->getMessage()}");
 }
 
@@ -69,7 +67,7 @@ if ($redirect) {
     header("Location: {$_SERVER['SCRIPT_NAME']}?$redirect_param_str");
 } else {
     $smarty->display('header.tpl');
-    foreach(explode(';', $smarty_view) as $v) {
+    foreach (explode(';', $smarty_view) as $v) {
         if (!empty($v)) {
             $smarty->display($v);
         }

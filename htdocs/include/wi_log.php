@@ -27,9 +27,9 @@ if ($_REQUEST['subaction'] == 'show') {
             $log = array_reverse(explode("\n", $log));
 
             //filter
-            foreach($log as $k => $v) {
+            foreach ($log as $k => $v) {
                 $pos = strpos($v, '] ');
-                $ll = trim(substr($v, $pos+2, 2));
+                $ll = trim(substr($v, $pos + 2, 2));
                 if ($ll > $filter_loglevel) {
                     unset($log[$k]);
                 }
@@ -42,7 +42,5 @@ if ($_REQUEST['subaction'] == 'show') {
         $smarty->assign('log_levels', $log_levels);
         $smarty->assign('filter_loglevel', $filter_loglevel);
         $smarty_view = 'log.tpl';
-
     } //if use_syslog
-
 } //if subaction == show

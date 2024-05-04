@@ -125,7 +125,7 @@ function modeChangeTimer($dbh, &$new_ow_state, &$switch_mode)
         $ow_path = "/{$result['ow_address']}/{$result['ow_pio']}";
 
         //check type
-        if (!checkOWType("/{$result['ow_address']}/", $result['ow_type'], array('sid'=>$result['id'], 'tpid'=>'NA'))) {
+        if (!checkOWType("/{$result['ow_address']}/", $result['ow_type'], array('sid' => $result['id'], 'tpid' => 'NA'))) {
             continue;
         }
 
@@ -169,7 +169,7 @@ function modeChangeOnOff($dbh, &$new_ow_state, &$switch_mode)
         $ow_path = "/{$result['ow_address']}/{$result['ow_pio']}";
 
         //check type
-        if (!checkOWType("/{$result['ow_address']}/", $result['ow_type'], array('sid'=>$result['id'], 'tpid'=>'NA'))) {
+        if (!checkOWType("/{$result['ow_address']}/", $result['ow_type'], array('sid' => $result['id'], 'tpid' => 'NA'))) {
             continue;
         }
 
@@ -183,7 +183,6 @@ function modeChangeOnOff($dbh, &$new_ow_state, &$switch_mode)
     } //while switch modes
 
     $sth->closeCursor();
-
 } //modeChangeOnOff
 
 
@@ -213,7 +212,7 @@ function emptyAtQueue()
 
 
 
-function reprogramAt($dbh, $limit_to_tpid="")
+function reprogramAt($dbh, $limit_to_tpid = "")
 {
     //Reprogram AT for a single time program. If $limit_to_tpid is empty get all time programs which are still valid and
     //all time programs which will become valid in the future.
@@ -223,7 +222,7 @@ function reprogramAt($dbh, $limit_to_tpid="")
     global $cfg;
     $at_retval = true;
 
-    logEvent('Reprogramming at for '.(intval($limit_to_tpid)>0 ? 'single':'all').' valid time programs', LLDEBUG);
+    logEvent('Reprogramming at for '.(intval($limit_to_tpid) > 0 ? 'single' : 'all').' valid time programs', LLDEBUG);
     $sql = "
 		SELECT tp.id AS tpid, s.id AS sid, *
 		FROM time_program tp
@@ -231,7 +230,7 @@ function reprogramAt($dbh, $limit_to_tpid="")
 		WHERE strftime('%Y-%m-%d', 'now', 'localtime') <= tp.valid_until
 	";
     //limit to a single time program
-    if (intval($limit_to_tpid)>0) {
+    if (intval($limit_to_tpid) > 0) {
         $sql .= " AND tp.id = {$limit_to_tpid}";
     }
 
@@ -266,15 +265,15 @@ function reprogramAt($dbh, $limit_to_tpid="")
                 $time_to_consider = $result['switch_off_time'];
             } else {
                 //calc runtime
-                $offtime = substr($result['switch_off_time'], 0, 2)*60 + substr($result['switch_off_time'], 3, 2);
-                $ontime = substr($result['switch_on_time'], 0, 2)*60 + substr($result['switch_on_time'], 3, 2);
+                $offtime = substr($result['switch_off_time'], 0, 2) * 60 + substr($result['switch_off_time'], 3, 2);
+                $ontime = substr($result['switch_on_time'], 0, 2) * 60 + substr($result['switch_on_time'], 3, 2);
                 if ($offtime < $ontime) {
                     $runtime = 1440 - ($ontime - $offtime);
                 } else {
                     $runtime = $offtime - $ontime;
                 }
                 //calc time to switch off - add another 60 to be sure no to act too early.
-                $time_to_consider = date('H:i', $result['time_switched_on']+$runtime*60+60);
+                $time_to_consider = date('H:i', $result['time_switched_on'] + $runtime * 60 + 60);
             }
         }
 
@@ -290,8 +289,8 @@ function reprogramAt($dbh, $limit_to_tpid="")
         }
 
         //cycle through next 7 days to find the next 'action-day'
-        while ($i<=7) {
-            $ts_i = $ts + $i*86400;
+        while ($i <= 7) {
+            $ts_i = $ts + $i * 86400;
             $day_i = date('w', $ts_i);
             $date_i = date('Y-m-d', $ts_i);
             //if time program is active we don't care about d0,d1.., valid_until, valid_from - we just need to switch off
@@ -307,7 +306,7 @@ function reprogramAt($dbh, $limit_to_tpid="")
 
         if ($found) {
             logEvent(
-                "Reprogram-All: Reprogramming to switch " .($result['active'] ? 'off':'on')
+                "Reprogram-All: Reprogramming to switch " .($result['active'] ? 'off' : 'on')
                 . " at {$time_to_consider} on $date_i. Time program id {$result['tpid']}",
                 LLINFO_ACTION
             );
@@ -328,7 +327,6 @@ function reprogramAt($dbh, $limit_to_tpid="")
 
 function handleTimePrograms($dbh, &$new_ow_state, &$switch_mode, &$time_programs_to_delete, $reprogramming_at)
 {
-
     global $cfg;
 
     //get all time programs where an action is due. i.e. all for switching on and all for switching off
@@ -424,15 +422,15 @@ function handleTimePrograms($dbh, &$new_ow_state, &$switch_mode, &$time_programs
             //decide how/when to switch off again
             if ($result['switch_off_priority'] == 'runtime') {
                 //reprogram at - priority given to runtime
-                $offtime = substr($result['switch_off_time'], 0, 2)*60 + substr($result['switch_off_time'], 3, 2);
-                $ontime = substr($result['switch_on_time'], 0, 2)*60 + substr($result['switch_on_time'], 3, 2);
+                $offtime = substr($result['switch_off_time'], 0, 2) * 60 + substr($result['switch_off_time'], 3, 2);
+                $ontime = substr($result['switch_on_time'], 0, 2) * 60 + substr($result['switch_on_time'], 3, 2);
                 if ($offtime < $ontime) {
                     $runtime = 1440 - ($ontime - $offtime);
                 } else {
                     $runtime = $offtime - $ontime;
                 }
-                $switch_off_time = date('H:i Y-m-d', time()+$runtime*60);
-                $runtime = sprintf('%02d:%02d', floor($runtime/60), $runtime%60);
+                $switch_off_time = date('H:i Y-m-d', time() + $runtime * 60);
+                $runtime = sprintf('%02d:%02d', floor($runtime / 60), $runtime % 60);
                 logEvent(
                     "Reprogramming (prio runtime) to switch off at $switch_off_time (runtime: $runtime)."
                     . " Time program id {$result['tpid']}",
@@ -516,8 +514,8 @@ function handleTimePrograms($dbh, &$new_ow_state, &$switch_mode, &$time_programs
             //if current time is less than switch_on_time it means that the time program was started the day before
             //therefore check if it should be reprogrammed starting from the current day. otherwise start from the next day
             $i = ($timenow < $result['switch_on_time'] ? 0 : 1);
-            while ($i<=7) {
-                $ts_i = $ts + $i*86400;
+            while ($i <= 7) {
+                $ts_i = $ts + $i * 86400;
                 $day_i = date('w', $ts_i);
                 $date_i = date('Y-m-d', $ts_i);
                 if ($result["d$day_i"] && $result['valid_until'] >= $date_i && $result['valid_from'] <= $date_i) {
@@ -534,9 +532,9 @@ function handleTimePrograms($dbh, &$new_ow_state, &$switch_mode, &$time_programs
                         . " Time program id {$result['tpid']}",
                         LLINFO_ACTION
                     );
-                       //reprog at
-                       $atcmd = $cfg['at_cmd_line'] . " {$result['switch_on_time']} $date_i";
-                       programAt($atcmd);
+                    //reprog at
+                    $atcmd = $cfg['at_cmd_line'] . " {$result['switch_on_time']} $date_i";
+                    programAt($atcmd);
                 }
             } else {
                 //no next possible day has been found on which to execute. i.e. time program
@@ -546,9 +544,7 @@ function handleTimePrograms($dbh, &$new_ow_state, &$switch_mode, &$time_programs
                     $time_programs_to_delete[$result['tpid']] = $result;
                 }
             }
-
         } //mode==timer and qry==off
-
     } //while time programs
 
     $sth->closeCursor();
@@ -592,7 +588,7 @@ function deleteExpiredTimePrograms($dbh, $time_programs_to_delete)
         return;
     }
 
-    foreach($time_programs_to_delete as $v) {
+    foreach ($time_programs_to_delete as $v) {
         logEvent(
             'Queuing time program for deletion after it became invalid: '
             . implode(',', array_keys($v)) .' - '. implode(',', $v),
