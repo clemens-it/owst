@@ -139,7 +139,6 @@ function modeChangeTimer($dbh, &$new_ow_state, &$switch_mode)
 		);
 	}
 	$sth->closeCursor();
-	$sth = null;
 } //modeChangeTimer
 
 
@@ -184,7 +183,6 @@ function modeChangeOnOff($dbh, &$new_ow_state, &$switch_mode)
 	} //while switch modes
 
 	$sth->closeCursor();
-	$sth = null;
 
 } //modeChangeOnOff
 
@@ -201,7 +199,7 @@ function emptyAtQueue()
 	}
 	$output = array(); //contains array with all output
 	unset ($retval); //return value
-	$lloutput = exec($cfg['atempty_cmd_line'], $output, $retval);
+	exec($cfg['atempty_cmd_line'], $output, $retval);
 	if ($retval == 0) {
 		logEvent("Emptying of at queue. Return value: ".$retval, LLINFO_ACTION);
 	} else {
@@ -321,7 +319,6 @@ function reprogramAt($dbh, $limit_to_tpid="")
 		}
 	} //while
 	$sth->closeCursor();
-	$sth = null;
 
 	return $at_retval;
 } //reprogramAt
@@ -554,7 +551,6 @@ function handleTimePrograms($dbh, &$new_ow_state, &$switch_mode, &$time_programs
 	} //while time programs
 
 	$sth->closeCursor();
-	$sth = null;
 } //handleTimePrograms
 
 
@@ -595,7 +591,7 @@ function deleteExpiredTimePrograms($dbh, $time_programs_to_delete)
 		return;
 	}
 
-	foreach($time_programs_to_delete as $k => $v) {
+	foreach($time_programs_to_delete as $v) {
 		logEvent(
 			'Queuing time program for deletion after it became invalid: '
 				. implode(',', array_keys($v)) .' - '. implode(',', $v),
