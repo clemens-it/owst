@@ -52,7 +52,7 @@ programs might switch off/on up to 59 seconds to late/early.
 ## Requirements
 
 * [OWFS](https://github.com/owfs/owfs)
-* A webserver with [PHP5+](https://www.php.net/)
+* A webserver with [PHP7+](https://www.php.net/)
 * [Smarty Template Engine 3.x](https://www.smarty.net/)
 * [SQLite3](https://www.sqlite.org/index.html)
 * cron/at
