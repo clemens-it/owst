@@ -1,9 +1,9 @@
 # OWST -- 1-Wire Switch Timer
 
 OWST is an Open Source project performing as a programmable timer for
-[1-Wire(R)](https://www.maximintegrated.com/en/products/ibutton-one-wire/one-wire.html)
-switches such as [DS2408](http://www.maximintegrated.com/datasheet/index.mvp/id/3818/t/al)
-(8-Channel Addressable Switch) or [DS2413](http://www.maximintegrated.com/datasheet/index.mvp/id/4588/t/al)
+[1-Wire(R)](https://www.analog.com/en/product-category/1wire-devices.html)
+switches such as [DS2408](https://www.analog.com/en/products/ds2408.html)
+(8-Channel Addressable Switch) or [DS2413](https://www.analog.com/en/products/ds2413.html)
 (Dual Channel Addressable Switch).
 
 
@@ -46,7 +46,7 @@ called periodically using cron or at the corresponding date and time using 'at'
 (with automatic reprogramming of 'at').
 
 OWS Timer Control works on a time resolution of minutes. Therefore time
-programs might switch off/on up too 59 seconds to late/early. 
+programs might switch off/on up to 59 seconds to late/early. 
 
 
 ## Requirements
