@@ -36,19 +36,19 @@ With the following commands owst will be installed in the following places:
     mkdir -m 0750 -p /var/lib/owst
     sqlite3 /var/lib/owst/owst.sq3 < doc/create_database.sql
     touch /var/lib/owst/owst.lock
-    chown -R owst.root /var/lib/owst
+    chown -R owst:root /var/lib/owst
     chmod 640 /var/lib/owst/*
 
     mkdir -m 0750 -p /var/log/owst
     chmod 640 /var/log/owst/owst.log > /var/log/owst/owst.log
-    chown -R owst.root /var/log/owst/
+    chown -R owst:root /var/log/owst/
 
 
 ### Create directory for command line interface and copy files.
 
     mkdir -p -m 0755 /opt/owst
     cp -aL cli/* /opt/owst/
-    chown -R owst.root /opt/owst
+    chown -R owst:root /opt/owst
 
 
 ### Configuration for cron job, log rotation, php fpm.
@@ -62,10 +62,10 @@ With the following commands owst will be installed in the following places:
 ### Create and set permissions for web service directory, copy file for web interface.
 
     mkdir -m 0750 -p /srv/www/owst
-    chown root.www-data /srv/www
+    chown root:www-data /srv/www
     chmod o+x /srv/www/
     cp -r htdocs/* /srv/www/owst/
-    chown -R owst.www-data /srv/www/owst/
+    chown -R owst:www-data /srv/www/owst/
 
 
 ### Enable php module owphp, restart PHP FPM service.
